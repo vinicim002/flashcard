@@ -1,0 +1,15 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary-flashcard: #5aa9e6;
+  --color-secondary-flashcard: #fcf6bd;
+  --color-navbar-flashcard: #1d3547;
+  --color-progress-flashcard: #224e70;
+  --color-bg-flashcard: #e0e0e0;
+  --color-white-flashcard: #f7f3f0;
+  --color-black-flashcard: #8b8b8b;
+  --color-card01-flashcard: #70d6ff;
+  --color-card02-flashcard: #d0f4de;
+  --color-card03-flashcard: #ffd670;
+  --color-card04-flashcard: #ff70a6;
+}
