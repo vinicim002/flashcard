@@ -1,3 +1,4 @@
+import { ChevronDown } from "lucide-react";
 import "./styles/global.css";
 import "./styles/theme.css";
 
@@ -9,22 +10,27 @@ export function App() {
         <button type="button">HOME</button>
       </nav>
 
-      <div className="mainContainer flex justify-center gap-3">
-        <div className="containerFlashcard bg-bg-flashcard border-4 border-primary-flashcard rounded-2xl p-5">
+      <section className="mainContainer flex justify-center gap-3">
+        <section className="containerFlashcard bg-bg-flashcard border-4 border-primary-flashcard rounded-2xl p-5">
           {/*Categorias do deck*/}
           <div className="optionsFlashCard">
             {/*Dropdown de categorias*/}
-            <button type="button" className="border-white-flashcard">
+            <button
+              type="button"
+              className="flex items-center gap-2 bg-white-flashcard text-black-flashcard px-3 py-2 rounded-2xl"
+            >
               Categorias
+              <span aria-hidden="true"><ChevronDown/></span>
             </button>
+
             {/*Checkbox para esconder cards masterizados*/}
             <div>
-              <input type="checkbox" />
-              <label htmlFor="">Esconder masterizadas</label>
+              <input type="checkbox" id="hide-mastered" />
+              <label htmlFor="hide-mastered">Esconder masterizadas</label>
             </div>
           </div>
           {/*Card*/}
-          <div className="flascard">
+          <article className="flashcard">
             <div className="frontCard">
               {/*Categora*/}
               <div className="categoriaFlashCard">Hooks</div>
@@ -35,7 +41,7 @@ export function App() {
                 <div>1/10</div>
               </div>
             </div>
-          </div>
+          </article>
           {/*Buttons de resete e saber card*/}
           <div className="buttonsFlashCard">
             <button>Eu sei essa</button>
@@ -46,9 +52,9 @@ export function App() {
             <p>Card 1 de 40</p>
             <button>Próximo</button>
           </div>
-        </div>
+        </section>
         {/*Segundo container*/}
-        <div className="containerEstatisticaCards bg-amber-300">
+        <aside className="containerEstatisticaCards bg-amber-300">
           {/*Estatísticas dos cards*/}
           <div className="estatisticaCards">
             <h2>Estatísticas</h2>
@@ -61,8 +67,8 @@ export function App() {
               <p>icon</p>
             </div>
           </div>
-        </div>
-      </div>
+        </aside>
+      </section>
     </div>
   );
 }
