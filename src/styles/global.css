@@ -22,16 +22,19 @@ h6 {
   font-style: normal;
 }
 
-.containerFlashcard {
+.containerFlashcard,
+.dropdown,
+.categoriaFlashCard,
+.btnNextCard,
+.btnPreviousCard,
+.containerEstatisticaCards {
   box-shadow: 8px 4px 0px rgb(90, 169, 230);
 }
 
-.dropdown {
-  box-shadow: 8px 4px 0px rgb(90, 169, 230);
-}
-
-.categoriaFlashCard {
-  box-shadow: 8px 4px 0px rgb(90, 169, 230);
+.btnEuSei,
+.btnResetarProgresso,
+.btnHome {
+  box-shadow: 8px 4px 0px rgb(252, 246, 189);
 }
 
 @theme inline {
