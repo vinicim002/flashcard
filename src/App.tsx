@@ -1,8 +1,15 @@
-import { PenIcon, TreesIcon } from "lucide-react";
+import {
+  CheckCircleIcon,
+  CheckIcon,
+  PenIcon,
+  PlayCircleIcon,
+  TreesIcon,
+} from "lucide-react";
 import { AppSidebar } from "./components/Sidebar";
 import { SidebarProvider, SidebarTrigger } from "./components/ui/sidebar";
 import "./styles/global.css";
 import "./styles/theme.css";
+import { Progress } from "./components/ui/progress";
 
 export function App({ children }: { children: React.ReactNode }) {
   return (
@@ -57,11 +64,155 @@ export function App({ children }: { children: React.ReactNode }) {
           </div>
         </div>
 
-        <div>{/*Aqui vai a listagem dos decks*/}
+        <div>
+          {/*Aqui vai a listagem dos decks*/}
           <ul>
-            <li></li>
+            <li className="flex mx-36 gap-8 mt-8">
+              <div className="statusCardHome flex gap-2 items-start">
+                <CheckCircleIcon />
+                <span>100%</span>
+              </div>
+              <div className="flex justify-between items-center w-full gap-4">
+                <div className="containerProgressbar flex flex-col gap-2">
+                  <div className="flex flex-col gap-2">
+                    <h5 className="text-primary-flashcard font-black text-2xl">Hooks</h5>
+                    <p>
+                      <span>32</span> de <span>32</span> cards concluidos
+                    </p>
+                  </div>
+                  <div className="barProgressCardHome w-full">
+                    <Progress className="w-[1000px]" value={32}/>
+                  </div>
+                </div>
+
+                <button className="items-end">
+                  <PlayCircleIcon />
+                </button>
+              </div>
+            </li>
+
+            <li className="flex mx-36 gap-8 mt-8">
+              <div className="statusCardHome flex gap-2 items-start">
+                <CheckCircleIcon />
+                <span>100%</span>
+              </div>
+              <div className="flex justify-between items-center w-full gap-4">
+                <div className="containerProgressbar flex flex-col gap-2">
+                  <div className="flex flex-col gap-2">
+                    <h5 className="text-primary-flashcard font-black text-2xl">Hooks</h5>
+                    <p>
+                      <span>32</span> de <span>32</span> cards concluidos
+                    </p>
+                  </div>
+                  <div className="barProgressCardHome w-full">
+                    <Progress className="w-[1000px]" value={32}/>
+                  </div>
+                </div>
+
+                <button className="items-end">
+                  <PlayCircleIcon />
+                </button>
+              </div>
+            </li>
+
+            <li className="flex mx-36 gap-8 mt-8">
+              <div className="statusCardHome flex gap-2 items-start">
+                <CheckCircleIcon />
+                <span>100%</span>
+              </div>
+              <div className="flex justify-between items-center w-full gap-4">
+                <div className="containerProgressbar flex flex-col gap-2">
+                  <div className="flex flex-col gap-2">
+                    <h5 className="text-primary-flashcard font-black text-2xl">Hooks</h5>
+                    <p>
+                      <span>32</span> de <span>32</span> cards concluidos
+                    </p>
+                  </div>
+                  <div className="barProgressCardHome w-full">
+                    <Progress className="w-[1000px]" value={32}/>
+                  </div>
+                </div>
+
+                <button className="items-end">
+                  <PlayCircleIcon />
+                </button>
+              </div>
+            </li>
+
+            <li className="flex mx-36 gap-8 mt-8">
+              <div className="statusCardHome flex gap-2 items-start">
+                <CheckCircleIcon />
+                <span>100%</span>
+              </div>
+              <div className="flex justify-between items-center w-full gap-4">
+                <div className="containerProgressbar flex flex-col gap-2">
+                  <div className="flex flex-col gap-2">
+                    <h5 className="text-primary-flashcard font-black text-2xl">Hooks</h5>
+                    <p>
+                      <span>32</span> de <span>32</span> cards concluidos
+                    </p>
+                  </div>
+                  <div className="barProgressCardHome w-full">
+                    <Progress className="w-[1000px]" value={32}/>
+                  </div>
+                </div>
+
+                <button className="items-end">
+                  <PlayCircleIcon />
+                </button>
+              </div>
+            </li>
+
+            <li className="flex mx-36 gap-8 mt-8">
+              <div className="statusCardHome flex gap-2 items-start">
+                <CheckCircleIcon />
+                <span>100%</span>
+              </div>
+              <div className="flex justify-between items-center w-full gap-4">
+                <div className="containerProgressbar flex flex-col gap-2">
+                  <div className="flex flex-col gap-2">
+                    <h5 className="text-primary-flashcard font-black text-2xl">Hooks</h5>
+                    <p>
+                      <span>32</span> de <span>32</span> cards concluidos
+                    </p>
+                  </div>
+                  <div className="barProgressCardHome w-full">
+                    <Progress className="w-[1000px]" value={32}/>
+                  </div>
+                </div>
+
+                <button className="items-end">
+                  <PlayCircleIcon />
+                </button>
+              </div>
+            </li>
+
+            <li className="flex mx-36 gap-8 mt-8">
+              <div className="statusCardHome flex gap-2 items-start">
+                <CheckCircleIcon />
+                <span>100%</span>
+              </div>
+              <div className="flex justify-between items-center w-full gap-4">
+                <div className="containerProgressbar flex flex-col gap-2">
+                  <div className="flex flex-col gap-2">
+                    <h5 className="text-primary-flashcard font-black text-2xl">Hooks</h5>
+                    <p>
+                      <span>32</span> de <span>32</span> cards concluidos
+                    </p>
+                  </div>
+                  <div className="barProgressCardHome w-full">
+                    <Progress className="w-[1000px]" value={32}/>
+                  </div>
+                </div>
+
+                <button className="items-end">
+                  <PlayCircleIcon />
+                </button>
+              </div>
+            </li>
           </ul>
         </div>
+        
       </div>
     </div>
   );
