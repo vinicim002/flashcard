@@ -1,6 +1,7 @@
 import { MateriaHeader } from "@/components/MateriaHeader";
 import { DeckList } from "@/components/DeckList";
 import { DeckListHeader } from "@/components/DeckListHeader";
+import { MainLayout } from "@/Layout/MainLayout";
 
 export function Home() {
   const decks = [
@@ -19,11 +20,12 @@ export function Home() {
   ];
 
   return (
-    <div className="mainContent">
-      {/* Main content goes here */}
-      <MateriaHeader nome={"REACT"} cardsEstudados={1} totalCards={1000} />
-      <DeckListHeader />
-      <DeckList decks={decks} />
-    </div>
+    <MainLayout>
+      <div className="mainContent w-full">
+        <MateriaHeader nome={"REACT"} cardsEstudados={1} totalCards={1000} />
+        <DeckListHeader />
+        <DeckList decks={decks} />
+      </div>
+    </MainLayout>
   );
 }

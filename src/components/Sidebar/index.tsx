@@ -7,7 +7,7 @@ import {
 
 export function AppSidebar() {
   return (
-    <Sidebar>
+    <Sidebar className="">
       <SidebarHeader className="bg-navbar-flashcard">
         <SidebarMenuItem className="flex justify-center py-2">
           <img src="../public/img/logoCompletaAmarela.svg" alt="" />
