@@ -42,39 +42,35 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon">
       {/* HEADER */}
-      <SidebarHeader className="bg-navbar-flashcard px-4 py-3">
-        <SidebarMenuItem className="flex p-2 justify-center">
+      <SidebarHeader className="bg-navbar-flashcard">
+        <SidebarMenuItem className="flex p-2">
           <img src="/img/logoCompletaAmarela.svg" alt="Logo" className="h-12" />
         </SidebarMenuItem>
       </SidebarHeader>
 
       {/* CONTENT */}
-      <SidebarContent className="bg-navbar-flashcard px-3 py-4 space-y-6">
-        {/* SEARCH */}
+      <SidebarContent className="bg-navbar-flashcard px-3 py-3'">
         <SearchInput />
 
         {/* GROUP: DECK */}
         <SidebarGroup className="p-0">
-          <SidebarGroupLabel className="flex items-center justify-between text-white-flashcard text-xs">
-            <span className="group-data-[collapsible=icon]:hidden">Deck</span>
+          <SidebarGroupLabel className="relative text-white-flashcard text-base p-0">
+            <span className="group-data-[collapsible=icon]:hidden">
+              Matérias
+            </span>
 
-            <SidebarGroupAction aria-label="Adicionar matéria">
-              <PlusIcon size={14} />
+            <SidebarGroupAction
+              title="Add Matéria"
+              className="absolute right-0 top-1/2 -translate-y-1/2 cursor-pointer"
+            >
+              <PlusIcon size={16} />
             </SidebarGroupAction>
           </SidebarGroupLabel>
-
-          <SidebarGroupContent>
-            <div className="flex items-center justify-between py-3">
-              <h3 className="text-base font-bold text-white-flashcard group-data-[collapsible=icon]:hidden">
-                ADICIONAR MATÉRIA
-              </h3>
-            </div>
-          </SidebarGroupContent>
         </SidebarGroup>
 
         {/* GROUP: MENU */}
         <SidebarGroup className="p-0">
-          <SidebarGroupLabel className="text-white-flashcard text-xs">
+          <SidebarGroupLabel className="text-white-flashcard text-xs p-0">
             Navegação
           </SidebarGroupLabel>
 
