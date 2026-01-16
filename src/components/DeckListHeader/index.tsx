@@ -1,8 +1,7 @@
 export function DeckListHeader() {
   return (
     <div>
-      {/*Aqui vai uma barra simples com titulo "meus decks", btn para adicionar novo deck */}
-      <div className="flex items-center justify-between bg-bg-flashcard py-2">
+      <div className="flex items-center justify-between bg-bg-flashcard py-2 w-full">
         <h2 className="text-2xl font-bold text-black-flashcard mx-36">
           MEUS DECKS
         </h2>

@@ -13,7 +13,6 @@ export function AppSidebar() {
           <img src="../public/img/logoCompletaAmarela.svg" alt="" />
         </SidebarMenuItem>
       </SidebarHeader>
-
       <SidebarContent className="bg-amber-300">a</SidebarContent>
     </Sidebar>
   );

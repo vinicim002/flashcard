@@ -21,7 +21,7 @@ export function Home() {
 
   return (
     <MainLayout>
-      <div className="mainContent w-full">
+      <div className="mainContent">
         <MateriaHeader nome={"REACT"} cardsEstudados={1} totalCards={1000} />
         <DeckListHeader />
         <DeckList decks={decks} />

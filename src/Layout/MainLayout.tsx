@@ -4,11 +4,14 @@ import { AppSidebar } from "@/components/Sidebar";
 export function MainLayout({ children }: { children: React.ReactNode }) {
   return (
     <SidebarProvider>
-      <AppSidebar />
-      <main>
-        <SidebarTrigger />
-        {children}
-      </main>
+      <div className="flex min-h-screen w-full overflow-x-hidden">
+        <AppSidebar />
+
+        <main className="flex-1 overflow-x-hidden">
+          <SidebarTrigger />
+          {children}
+        </main>
+      </div>
     </SidebarProvider>
   );
 }

@@ -8,13 +8,16 @@ type MateriaHeaderProps = {
   cardsEstudados: number;
 };
 
-export function MateriaHeader({nome, totalCards, cardsEstudados}: MateriaHeaderProps) {
+export function MateriaHeader({
+  nome,
+  totalCards,
+  cardsEstudados,
+}: MateriaHeaderProps) {
   return (
     <div className="flex justify-between items-center mx-36 my-6">
-      {/*Aqui vai a config do titulo e da img e o status dos decks*/}
       <div className="flex items-center gap-4">
         <LogoDaMateria />
-        
+
         <div className="flex flex-col gap-4">
           <div className="flex items-center gap-4">
             <h3 className="text-5xl font-black text-primary-flashcard">
@@ -25,8 +28,13 @@ export function MateriaHeader({nome, totalCards, cardsEstudados}: MateriaHeaderP
             </button>
           </div>
           <p className="text-black-flashcard">
-            <span className="text-primary-flashcard font-semibold">{cardsEstudados}</span> de{" "}
-            <span className="text-primary-flashcard font-semibold">{totalCards}</span>{" "}
+            <span className="text-primary-flashcard font-semibold">
+              {cardsEstudados}
+            </span>{" "}
+            de{" "}
+            <span className="text-primary-flashcard font-semibold">
+              {totalCards}
+            </span>{" "}
             cards estudados
           </p>
         </div>
