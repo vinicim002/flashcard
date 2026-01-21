@@ -1,15 +1,16 @@
-import { TreesIcon } from "lucide-react";
+import type { ReactNode } from "react";
 
-// type LogoDaMateriaProps = {
-//   iconSize?: number;
-//   iconColor?: string;
-//   icon: React.ReactNode;
-// };
+type LogoDaMateriaProps = {
+  icon: ReactNode;
+  className?: string;
+};
 
-export function LogoDaMateria() {
+export function LogoDaMateria({ icon, className = "" }: LogoDaMateriaProps) {
   return (
-    <div className="logoDaMateria bg-primary-flashcard p-8 rounded-lg">
-      <TreesIcon size={64} />
+    <div
+      className={`logoDaMateria bg-primary-flashcard rounded-lg flex items-center justify-center ${className}`}
+    >
+      {icon}
     </div>
   );
 }
