@@ -7,15 +7,11 @@ import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarGroupAction,
+  SidebarMenu,
+  SidebarMenuButton,
 } from "@/components/ui/sidebar";
 
-import {
-  Home,
-  Calendar,
-  Settings,
-  PlusIcon,
-  TreesIcon,
-} from "lucide-react";
+import { Home, Calendar, Settings, PlusIcon, TreesIcon } from "lucide-react";
 
 import { SearchInput } from "../Search";
 import { LogoDaMateria } from "../LogoDaMateria";
@@ -62,17 +58,18 @@ export function AppSidebar() {
             {[1, 2, 3, 4].map((_, index) => (
               <button
                 key={index}
-                className="w-full flex items-center gap-3 p-2 rounded-lg text-left hover:bg-white/5 transition"
+                className="w-full flex items-center gap-3 p-2 rounded-lg text-left hover:bg-white-flashcard/5 transition cursor-pointer"
               >
-                <LogoDaMateria
-                  icon={<TreesIcon size={16} />} className="p-2"
-                />
+                <LogoDaMateria icon={<TreesIcon size={16} />} className="p-2" />
 
                 <div className="flex-1">
-                  <p className="text-base font-medium text-white-flashcard">
+                  <p className="text-base font-medium text-white-flashcard group-data-[collapsible=icon]:hidden">
                     React
                   </p>
-                  <Progress value={70} className="h-1 mt-1" />
+                  <Progress
+                    value={70}
+                    className="h-1 mt-1 w-full group-data-[collapsible=icon]:hidden"
+                  />
                 </div>
               </button>
             ))}
@@ -85,26 +82,43 @@ export function AppSidebar() {
             Navegação
           </SidebarGroupLabel>
 
-          <div className="space-y-1">
+          <SidebarMenu>
             {menuItems.map((item) => (
-              <a
-                key={item.title}
-                href={item.url}
-                className="flex items-center gap-3 px-2 py-2 rounded-lg text-white-flashcard hover:bg-white/5 transition"
-              >
-                <item.icon size={18} />
-                <span className="group-data-[collapsible=icon]:hidden">
-                  {item.title}
-                </span>
-              </a>
+              <SidebarMenuItem key={item.title}>
+                <SidebarMenuButton asChild>
+                  <a href={item.url}>
+                    <item.icon size={18} />
+                    <span className="group-data-[collapsible=icon]:hidden">
+                      {item.title}
+                    </span>
+                  </a>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             ))}
-          </div>
+          </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
 
       {/* FOOTER */}
-      <SidebarFooter className="bg-navbar-flashcard px-4 py-3">
-        {/* User / logout futuramente */}
+      <SidebarFooter className="bg-navbar-flashcard px-4 py-3 border-t-2 border-white-flashcard">
+        <div className="flex items-center gap-3">
+          {/* Avatar */}
+          <img
+            src="/img/avatar.jpg"
+            alt="Avatar do usuário"
+            className="h-12 w-12 rounded-full object-cover"
+          />
+
+          {/* Info do usuário */}
+          <div className="leading-tight group-data-[collapsible=icon]:hidden">
+            <p className="text-sm font-semibold text-white-flashcard">
+              Vinicius
+            </p>
+            <p className="text-xs text-white-flashcard/70">
+              Engenharia da Computação
+            </p>
+          </div>
+        </div>
       </SidebarFooter>
     </Sidebar>
   );
