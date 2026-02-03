@@ -23,7 +23,11 @@ const menuItems = [
   { title: "Settings", url: "/settings", icon: Settings },
 ];
 
-export function AppSidebar() {
+type AppSidebarProps = {
+  onAddMateria?: () => void;
+}
+
+export function AppSidebar({ onAddMateria }: AppSidebarProps) {
   return (
     <Sidebar collapsible="icon">
       {/* HEADER */}
@@ -48,8 +52,9 @@ export function AppSidebar() {
             <SidebarGroupAction
               title="Adicionar Matéria"
               className="absolute right-0 top-1/2 -translate-y-1/2"
+              onClick={onAddMateria}
             >
-              <PlusIcon size={16} />
+              <PlusIcon size={16}/>
             </SidebarGroupAction>
           </SidebarGroupLabel>
 

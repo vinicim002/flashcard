@@ -1,11 +1,16 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/Sidebar";
 
-export function MainLayout({ children }: { children: React.ReactNode }) {
+type MainLayoutProps = {
+  children: React.ReactNode;
+  onAddMateria?: () => void;
+}
+
+export function MainLayout({ children, onAddMateria }: MainLayoutProps) {
   return (
     <SidebarProvider defaultOpen={false}>
       <div className="flex min-h-screen w-full overflow-x-hidden">
-        <AppSidebar />
+        <AppSidebar onAddMateria={onAddMateria}/>
 
         <main className="flex-1 overflow-x-hidden">
           <SidebarTrigger />
