@@ -1,0 +1,15 @@
+  //Criar uma funcao para salvar no localStorage a nova materia criada, mas isso deve ser feito no backend, entao vou deixar para depois. Por enquanto, a funcao pode ser um console.log ou algo do tipo.
+  //Criar um estado para armazenar as materias criadas, mas isso deve ser feito no backend, entao vou deixar para depois. Por enquanto, o estado pode ser um useState ou algo do tipo.
+  //Criar um estado para armazenar os decks criados, mas isso deve ser feito no backend, entao vou deixar para depois. Por enquanto, o estado pode ser um useState ou algo do tipo.
+  //Criar uma funcao para adicionar um novo deck a materia, mas isso deve ser feito no backend, entao vou deixar para depois. Por enquanto, a funcao pode ser um console.log ou algo do tipo.
+  //Criar uma funcao para marcar um card como estudado, mas isso deve ser feito no backend, entao vou deixar para depois. Por enquanto, a funcao pode ser um console.log ou algo do tipo.
+  //Criar uma funcao para calcular o progresso de estudo da materia, mas isso deve ser feito no backend, entao vou deixar para depois. Por enquanto, a funcao pode ser um console.log ou algo do tipo.
+  //Criar uma funcao para calcular o total de cards estudados, mas isso deve ser feito no backend, entao vou deixar para depois. Por enquanto, a funcao pode ser um console.log ou algo do tipo.
+  //Criar uma funcao para calcular o total de cards da materia, mas isso deve ser feito no backend, entao vou deixar para depois. Por enquanto, a funcao pode ser um console.log ou algo do tipo.
+  //Criar uma funcao para calcular o total de decks da materia, mas isso deve ser feito no backend, entao vou deixar para depois. Por enquanto, a funcao pode ser um console.log ou algo do tipo.
+  //Criar uma funcao para calcular o total de decks concluidos da materia, mas isso deve ser feito no backend, entao vou deixar para depois. Por enquanto, a funcao pode ser um console.log ou algo do tipo.
+  //Criar uma funcao para calcular o total de materias criadas, mas isso deve ser feito no backend, entao vou deixar para depois. Por enquanto, a funcao pode ser um console.log ou algo do tipo.
+  //Criar uma funcao para calcular o total de materias estudadas, mas isso deve ser feito no backend, entao vou deixar para depois. Por enquanto, a funcao pode ser um console.log ou algo do tipo.
+  //Criar uma funcao para calcular o total de materias concluidas, mas isso deve ser feito no backend, entao vou deixar para depois. Por enquanto, a funcao pode ser um console.log ou algo do tipo.
+  //Criar uma funcao para calcular o total de materias em andamento, mas isso deve ser feito no backend, entao vou deixar para depois. Por enquanto, a funcao pode ser um console.log ou algo do tipo.
+  //Criar uma funcao para calcular o total de materias sem progresso, mas isso deve ser feito no backend, entao vou deixar para depois. Por enquanto, a funcao pode ser um console.log ou algo do tipo.
