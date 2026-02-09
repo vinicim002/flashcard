@@ -5,19 +5,16 @@ import { MainLayout } from "@/Layout/MainLayout";
 import { Modal } from "@/components/Modal";
 import { useModal } from "@/hooks/use-modal";
 import { AddMateriaForm } from "@/components/Modal/AddMateriaForm";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useMaterias } from "@/hooks/use-Materias";
 import type { MateriaModel } from "@/models/MateriaModel";
 
 export function Home() {
   const modal = useModal();
+  const { materias, handleAddMateria } = useMaterias();
 
-  const [materias, setMaterias] = useState<MateriaModel[]>(() => {
-    const materiasSalvas = localStorage.getItem("materias");
-    return materiasSalvas ? JSON.parse(materiasSalvas) : [];
-  });
-
-  function handleAddMateria(newMateria: MateriaModel) {
-    setMaterias((prevNewMateria) => [...prevNewMateria, newMateria]);
+  function handleSubmitMateria(newMateria: MateriaModel) {
+    handleAddMateria(newMateria);
     modal.close();
   }
 
@@ -41,13 +38,13 @@ export function Home() {
   ];
 
   return (
-    <MainLayout onAddMateria={modal.open}>
+    <MainLayout onAddMateria={modal.open} materias={materias}>
       <div className="mainContent">
         <MateriaHeader nome={"REACT"} cardsEstudados={1} totalCards={1000} />
         <DeckListHeader />
         <DeckList decks={decks} />
         <Modal isOpen={modal.isOpen} onClose={modal.close}>
-          <AddMateriaForm onSubmit={handleAddMateria}></AddMateriaForm>
+          <AddMateriaForm onSubmit={handleSubmitMateria}></AddMateriaForm>
         </Modal>
       </div>
     </MainLayout>

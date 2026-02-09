@@ -16,6 +16,7 @@ import { Home, Calendar, Settings, PlusIcon, TreesIcon } from "lucide-react";
 import { SearchInput } from "../Search";
 import { LogoDaMateria } from "../LogoDaMateria";
 import { Progress } from "@/components/ui/progress";
+import type { MateriaModel } from "@/models/MateriaModel";
 
 const menuItems = [
   { title: "Home", url: "/", icon: Home },
@@ -25,9 +26,11 @@ const menuItems = [
 
 type AppSidebarProps = {
   onAddMateria?: () => void;
+  materias: MateriaModel[];
 }
 
-export function AppSidebar({ onAddMateria }: AppSidebarProps) {
+export function AppSidebar({ onAddMateria, materias}: AppSidebarProps) {
+
   return (
     <Sidebar collapsible="icon">
       {/* HEADER */}
@@ -60,16 +63,16 @@ export function AppSidebar({ onAddMateria }: AppSidebarProps) {
 
           {/* LISTA DE MATÉRIAS */}
           <div className="mt-4 space-y-2">
-            {[1, 2, 3, 4].map((_, index) => (
+            {materias.map((materia) => (
               <button
-                key={index}
+                key={materia.id}
                 className="w-full flex items-center gap-3 p-2 rounded-lg text-left hover:bg-white-flashcard/5 transition cursor-pointer"
               >
-                <LogoDaMateria icon={<TreesIcon size={16} />} className="p-2" />
+                <LogoDaMateria icon={<TreesIcon size={16} />} className={"p-2"} style={{ backgroundColor: materia.cor }} />
 
                 <div className="flex-1">
                   <p className="text-base font-medium text-white-flashcard group-data-[collapsible=icon]:hidden">
-                    React
+                    {materia.nome}
                   </p>
                   <Progress
                     value={70}
