@@ -1,8 +1,12 @@
-
-import { FlashCard } from "./pages/FlashCards";
-import { Home } from "./pages/Home";import "./styles/global.css";
+import { MainRouter } from "./routers/MainRouter";
+import "./styles/global.css";
 import "./styles/theme.css";
 
+
 export function App() {
-  return <Home />;
+  return (
+    <>
+      <MainRouter />
+    </>
+  );
 }
