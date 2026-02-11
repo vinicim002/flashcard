@@ -1,15 +1,8 @@
+import type { DeckModel } from "@/models/DeckModel";
 import { DeckCard } from "../DeckCard";
 
-type Deck = {
-  id: string;
-  nome: string;
-  totalCards: number;
-  cardsConcluidos: number;
-};
-
 type DeckListProps = {
-  decks: Deck[];
-  // onPlayDeck: (id: string) => void;
+  decks: DeckModel[];
 };
 
 export function DeckList({ decks }: DeckListProps) {
@@ -19,9 +12,8 @@ export function DeckList({ decks }: DeckListProps) {
         <DeckCard
           key={deck.id}
           nomeDeck={deck.nome}
-          totalCards={deck.totalCards}
-          cardsConcluidos={deck.cardsConcluidos}
-          // onPlay={() => onPlayDeck(deck.id)}
+          totalCards={deck.cards.length}
+          cardsConcluidos={deck.cards.filter((card) => card.concluido).length}
         />
       ))}
     </ul>

@@ -27,7 +27,7 @@ export function AddMateriaForm({ onSubmit }: AddMateriaFormProps) {
     const newMateria = {
       id: uuidv4(),
       nome: nomeMateria,
-      deck: [],
+      decks: [],
       totalDecksConcluidos: 0,
       imagemUrl: urlImgMateria,
       cor: corMateria,

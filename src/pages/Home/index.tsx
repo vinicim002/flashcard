@@ -7,40 +7,49 @@ import { useModal } from "@/hooks/use-modal";
 import { AddMateriaForm } from "@/components/Modal/AddMateriaForm";
 import type { MateriaModel } from "@/models/MateriaModel";
 import { useMateriasContext } from "@/contexts/MateriasContext/useMaterias";
+import { useParams } from "react-router";
+import { AddDeckForm } from "@/components/Modal/AddDeckForm";
+import type { DeckModel } from "@/models/DeckModel";
 
 export function Home() {
-  const modal = useModal();
+  const { materias, handleAddMateria, handleAddDeck } = useMateriasContext();
+  const modal = useModal<"materia" | "deck">();
 
-  const { handleAddMateria } = useMateriasContext();
+  const { id } = useParams();
+
+  const materiaAtual = materias.find((materia) => materia.id === id);
 
   function handleSubmitMateria(newMateria: MateriaModel) {
     handleAddMateria(newMateria);
     modal.close();
   }
 
-  const decks = [
-    {
-      id: "1",
-      nome: "Hooks",
-      totalCards: 32,
-      cardsConcluidos: 32,
-    },
-    {
-      id: "2",
-      nome: "Context API",
-      totalCards: 20,
-      cardsConcluidos: 5,
-    },
-  ];
+  function handleSubmitDeck(newDeck: DeckModel) {
+    if (!id) return;
+
+    handleAddDeck(id, newDeck);
+    modal.close();
+  }
 
   return (
-    <MainLayout onAddMateria={modal.open}>
+    <MainLayout onAddMateria={() => modal.open("materia")}>
       <div className="mainContent">
-        <MateriaHeader nome={"REACT"} cardsEstudados={1} totalCards={1000} />
-        <DeckListHeader />
-        <DeckList decks={decks} />
+        {!materiaAtual ? (
+          <div>Selecione uma materia</div>
+        ) : (
+          <>
+            <MateriaHeader materiaAtual={materiaAtual} />
+            <DeckListHeader onAddDeck={() => modal.open("deck")} />
+            <DeckList decks={materiaAtual.decks} />
+          </>
+        )}
         <Modal isOpen={modal.isOpen} onClose={modal.close}>
-          <AddMateriaForm onSubmit={handleSubmitMateria}></AddMateriaForm>
+          {modal.data === "materia" && (
+            <AddMateriaForm onSubmit={handleSubmitMateria} />
+          )}
+          {modal.data === "deck" && (
+            <AddDeckForm onSubmitDeck={handleSubmitDeck} />
+          )}
         </Modal>
       </div>
     </MainLayout>

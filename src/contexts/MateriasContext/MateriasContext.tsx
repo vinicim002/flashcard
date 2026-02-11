@@ -1,11 +1,13 @@
-import React from "react";
+import { createContext } from "react";
 import type { MateriaModel } from "@/models/MateriaModel";
+import type { DeckModel } from "@/models/DeckModel";
 
-type MateriasContextType = {
+type MateriasContextProps = {
   materias: MateriaModel[];
-  handleAddMateria: (materia: MateriaModel) => void;
+  handleAddMateria: (newMateria: MateriaModel) => void;
+  handleAddDeck: (materiaId: string, newDeck: DeckModel) => void;
 };
 
-export const MateriasContext = React.createContext(
-  {} as MateriasContextType
+export const MateriasContext = createContext(
+  {} as MateriasContextProps
 );

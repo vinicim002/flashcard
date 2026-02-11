@@ -1,25 +1,18 @@
 import { useState } from "react";
 
-export function useModal() {
-  // Modal logic to be implemented
+export function useModal<T>() {
   const [isOpen, setIsOpen] = useState(false);
+  const [data, setData] = useState<T | null>(null);
 
-  function open() {
+  function open(modalData?: T) {
+    setData(modalData ?? null);
     setIsOpen(true);
   }
 
   function close() {
     setIsOpen(false);
+    setData(null);
   }
 
-  function toggle() {
-    setIsOpen((prev) => !prev);
-  }
-
-  return {
-    isOpen,
-    open,
-    close,
-    toggle,
-  };
+  return { isOpen, open, close, data };
 }

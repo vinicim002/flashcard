@@ -9,6 +9,7 @@ export function MainRouter() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/materia/:id" element={<Home />}/>
           <Route path="/flashcard" element={<FlashCard />} />
         </Routes>
       </BrowserRouter>

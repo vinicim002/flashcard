@@ -17,6 +17,7 @@ import { SearchInput } from "../Search";
 import { LogoDaMateria } from "../LogoDaMateria";
 import { Progress } from "@/components/ui/progress";
 import { useMateriasContext } from "@/contexts/MateriasContext/useMaterias";
+import { useNavigate } from "react-router";
 
 const menuItems = [
   { title: "Home", url: "/", icon: Home },
@@ -30,6 +31,7 @@ type AppSidebarProps = {
 
 export function AppSidebar({ onAddMateria }: AppSidebarProps) {
   const { materias } = useMateriasContext();
+  const navigate = useNavigate();
 
   return (
     <Sidebar collapsible="icon">
@@ -67,6 +69,7 @@ export function AppSidebar({ onAddMateria }: AppSidebarProps) {
               <button
                 key={materia.id}
                 className="w-full flex items-center gap-3 p-2 rounded-lg text-left hover:bg-white-flashcard/5 transition cursor-pointer"
+                onClick={() => navigate(`/materia/${materia.id}`)}
               >
                 <LogoDaMateria
                   icon={<TreesIcon size={16} />}
