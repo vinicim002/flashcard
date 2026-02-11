@@ -5,22 +5,18 @@ import { MainLayout } from "@/Layout/MainLayout";
 import { Modal } from "@/components/Modal";
 import { useModal } from "@/hooks/use-modal";
 import { AddMateriaForm } from "@/components/Modal/AddMateriaForm";
-import { useEffect } from "react";
-import { useMaterias } from "@/hooks/use-Materias";
 import type { MateriaModel } from "@/models/MateriaModel";
+import { useMateriasContext } from "@/contexts/MateriasContext/useMaterias";
 
 export function Home() {
   const modal = useModal();
-  const { materias, handleAddMateria } = useMaterias();
+
+  const { handleAddMateria } = useMateriasContext();
 
   function handleSubmitMateria(newMateria: MateriaModel) {
     handleAddMateria(newMateria);
     modal.close();
   }
-
-  useEffect(() => {
-    localStorage.setItem("materias", JSON.stringify(materias));
-  }, [materias]);
 
   const decks = [
     {
@@ -38,7 +34,7 @@ export function Home() {
   ];
 
   return (
-    <MainLayout onAddMateria={modal.open} materias={materias}>
+    <MainLayout onAddMateria={modal.open}>
       <div className="mainContent">
         <MateriaHeader nome={"REACT"} cardsEstudados={1} totalCards={1000} />
         <DeckListHeader />

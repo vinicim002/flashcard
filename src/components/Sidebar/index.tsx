@@ -16,7 +16,7 @@ import { Home, Calendar, Settings, PlusIcon, TreesIcon } from "lucide-react";
 import { SearchInput } from "../Search";
 import { LogoDaMateria } from "../LogoDaMateria";
 import { Progress } from "@/components/ui/progress";
-import type { MateriaModel } from "@/models/MateriaModel";
+import { useMateriasContext } from "@/contexts/MateriasContext/useMaterias";
 
 const menuItems = [
   { title: "Home", url: "/", icon: Home },
@@ -26,10 +26,10 @@ const menuItems = [
 
 type AppSidebarProps = {
   onAddMateria?: () => void;
-  materias: MateriaModel[];
-}
+};
 
-export function AppSidebar({ onAddMateria, materias}: AppSidebarProps) {
+export function AppSidebar({ onAddMateria }: AppSidebarProps) {
+  const { materias } = useMateriasContext();
 
   return (
     <Sidebar collapsible="icon">
@@ -57,7 +57,7 @@ export function AppSidebar({ onAddMateria, materias}: AppSidebarProps) {
               className="absolute right-0 top-1/2 -translate-y-1/2"
               onClick={onAddMateria}
             >
-              <PlusIcon size={16}/>
+              <PlusIcon size={16} />
             </SidebarGroupAction>
           </SidebarGroupLabel>
 
@@ -68,7 +68,11 @@ export function AppSidebar({ onAddMateria, materias}: AppSidebarProps) {
                 key={materia.id}
                 className="w-full flex items-center gap-3 p-2 rounded-lg text-left hover:bg-white-flashcard/5 transition cursor-pointer"
               >
-                <LogoDaMateria icon={<TreesIcon size={16} />} className={"p-2"} style={{ backgroundColor: materia.cor }} />
+                <LogoDaMateria
+                  icon={<TreesIcon size={16} />}
+                  className={"p-2"}
+                  style={{ backgroundColor: materia.cor }}
+                />
 
                 <div className="flex-1">
                   <p className="text-base font-medium text-white-flashcard group-data-[collapsible=icon]:hidden">
