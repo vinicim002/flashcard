@@ -1,25 +1,29 @@
-import { CheckCircleIcon, PlayCircleIcon } from "lucide-react";
+import { PenIcon } from "lucide-react";
 import { Progress } from "../ui/progress";
+import { useNavigate } from "react-router";
 
 type DeckCardProps = {
+  id: string;
+  materiaId: string;
   nomeDeck: string;
   totalCards: number;
   cardsConcluidos: number;
-  // onPlay: () => void;
 };
 
 export function DeckCard({
-  nomeDeck = "Hook",
-  totalCards = 32,
-  cardsConcluidos = 32,
-}: // onPlay,
-DeckCardProps) {
+  id,
+  materiaId,
+  nomeDeck,
+  totalCards,
+  cardsConcluidos,
+}: DeckCardProps) {
+  const navigate = useNavigate();
+
   return (
-    <li className="flex mx-36 gap-8 mt-8">
-      <div className="statusCardHome flex gap-2 items-start">
-        <CheckCircleIcon />
-        <span>100%</span>
-      </div>
+    <li
+      className="flex mx-36 gap-8 mt-8 hover:bg-primary-flashcard/20 transition rounded-lg p-4 cursor-pointer"
+      onClick={() => navigate(`/materia/${materiaId}/deck/${id}`)}
+    >
       <div className="flex justify-between items-center w-full gap-4">
         <div className="containerProgressbar flex flex-col gap-2">
           <div className="flex flex-col gap-2">
@@ -36,8 +40,8 @@ DeckCardProps) {
           </div>
         </div>
 
-        <button className="items-end">
-          <PlayCircleIcon />
+        <button className="items-end" aria-label="Edit" title="Edit">
+          <PenIcon />
         </button>
       </div>
     </li>

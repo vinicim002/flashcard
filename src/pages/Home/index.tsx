@@ -40,7 +40,7 @@ export function Home() {
           <>
             <MateriaHeader materiaAtual={materiaAtual} />
             <DeckListHeader onAddDeck={() => modal.open("deck")} />
-            <DeckList decks={materiaAtual.decks} />
+            <DeckList decks={materiaAtual.decks} materiaId={materiaAtual.id} />
           </>
         )}
         <Modal isOpen={modal.isOpen} onClose={modal.close}>
