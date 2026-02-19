@@ -1,8 +1,47 @@
-// type AddCardFormProps = {
+import type { CardModel } from "@/models/CardModel";
+import { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
 
-// }
+type AddCardFormProps = {
+  onSubmitCard: (card: CardModel) => void;
+};
 
-export function AddCardForm() {
+export function AddCardForm({ onSubmitCard }: AddCardFormProps) {
+  const [frenteCard, setFrenteCard] = useState("");
+  const [versoCard, setVersoCard] = useState("");
+  const [dicaCard, setDicaCard] = useState("");
+
+  function handleFrenteChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
+    setFrenteCard(e.target.value);
+  }
+
+  function handleVersoChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
+    setVersoCard(e.target.value);
+  }
+
+  function handleDicaChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setDicaCard(e.target.value);
+  }
+
+  function handleSubmitCard(e: React.FormEvent) {
+    e.preventDefault();
+
+    const newCard = {
+      id: uuidv4(),
+      frente: frenteCard,
+      verso: versoCard,
+      dica: dicaCard,
+      concluido: false,
+    };
+
+    onSubmitCard(newCard);
+
+    setDicaCard("");
+    setFrenteCard("");
+    setVersoCard("");
+    console.log(newCard);
+  }
+
   return (
     <>
       {/* Header */}
@@ -14,7 +53,7 @@ export function AddCardForm() {
       </div>
 
       {/* Form */}
-      <form className="space-y-4">
+      <form className="space-y-4" onSubmit={handleSubmitCard}>
         {/* Frente do Card */}
         <div className="flex flex-col gap-1">
           <label
@@ -29,6 +68,8 @@ export function AddCardForm() {
             placeholder="Ex: O que é useEffect?"
             rows={4}
             className="resize-none rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+            value={frenteCard}
+            onChange={handleFrenteChange}
           />
         </div>
 
@@ -46,6 +87,8 @@ export function AddCardForm() {
             placeholder="Hook usado para efeitos colaterais..."
             rows={4}
             className="resize-none rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+            value={versoCard}
+            onChange={handleVersoChange}
           />
         </div>
 
@@ -63,6 +106,8 @@ export function AddCardForm() {
             type="text"
             placeholder="Ex: Hook de ciclo de vida"
             className="rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+            value={dicaCard}
+            onChange={handleDicaChange}
           />
         </div>
 

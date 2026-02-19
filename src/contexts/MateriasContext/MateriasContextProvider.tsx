@@ -2,6 +2,7 @@ import { MateriasContext } from "./MateriasContext";
 import type { MateriaModel } from "@/models/MateriaModel";
 import type { DeckModel } from "@/models/DeckModel";
 import { useEffect, useState } from "react";
+import type { CardModel } from "@/models/CardModel";
 
 type MateriasContextProviderProps = {
   children: React.ReactNode;
@@ -36,6 +37,26 @@ export function MateriasContextProvider({
     );
   }
 
+  //Adicionar card dentro do deck correto
+  function handleAddCard(deckId: string, newCard: CardModel) {
+    setMaterias((prev) =>
+      prev.map((materia) => {
+        const deckExiste = materia.decks.some((deck) => deck.id === deckId);
+
+        if (!deckExiste) return materia;
+
+        return {
+          ...materia,
+          decks: materia.decks.map((deck) =>
+            deck.id === deckId
+              ? { ...deck, cards: [...deck.cards, newCard] }
+              : deck,
+          ),
+        };
+      }),
+    );
+  }
+
   // Persistência
   useEffect(() => {
     localStorage.setItem("materias", JSON.stringify(materias));
@@ -47,6 +68,7 @@ export function MateriasContextProvider({
         materias,
         handleAddMateria,
         handleAddDeck,
+        handleAddCard,
       }}
     >
       {children}
