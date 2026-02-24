@@ -29,7 +29,7 @@ type AppSidebarProps = {
 export function AppSidebar({ onAddMateria }: AppSidebarProps) {
   const { materias } = useMateriasContext();
   const navigate = useNavigate();
-  const { state } = useSidebar(); // 👈 "expanded" | "collapsed"
+  const { state } = useSidebar();
   const collapsed = state === "collapsed";
   const { perfil, salvarPerfil } = usePerfil();
   const modalPerfil = useModal();
@@ -38,23 +38,25 @@ export function AppSidebar({ onAddMateria }: AppSidebarProps) {
     <Sidebar collapsible="icon">
       {/* HEADER */}
       <SidebarHeader className="bg-navbar-flashcard">
-        <SidebarMenuItem className="flex items-center justify-center p-2">
-          {collapsed ? ( // 👈 troca por condicional JS
+        <SidebarMenuItem className="flex items-center justify-center p-1 list-none">
+          {collapsed ? (
             <img
-              src="/img/logoIcone.svg"
+              src="img/logoCircle.png"
               alt="Logo"
-              className="h-8 w-8 shrink-0"
+              className="h-8 w-8 min-w-[2rem] min-h-[2rem] rounded-full object-cover shrink-0"
             />
           ) : (
-            <img
-              src="/img/logoCompletaAmarela.svg"
-              alt="Logo"
-              className="h-12"
-            />
+            /* Logo completa quando aberta */
+            <div className="flex h-14 items-center justify-center p-2">
+              <img
+                src="/img/logoCompletaAmarela.svg"
+                alt="Logo"
+                className="h-full w-auto object-contain"
+              />
+            </div>
           )}
         </SidebarMenuItem>
       </SidebarHeader>
-
       {/* CONTENT */}
       <SidebarContent className="bg-navbar-flashcard px-3 py-3 space-y-6">
         {/* SEARCH — só no modo expandido */}
