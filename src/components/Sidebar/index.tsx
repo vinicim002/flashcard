@@ -7,24 +7,20 @@ import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarGroupAction,
-  SidebarMenu,
-  SidebarMenuButton,
   useSidebar, // 👈
 } from "@/components/ui/sidebar";
 
-import { Home, Calendar, Settings, PlusIcon, TreesIcon } from "lucide-react";
+import { PenIcon, PlusIcon, TreesIcon, UserCircle } from "lucide-react";
 
 import { SearchInput } from "../Search";
 import { LogoDaMateria } from "../LogoDaMateria";
 import { Progress } from "@/components/ui/progress";
 import { useMateriasContext } from "@/contexts/MateriasContext/useMaterias";
 import { useNavigate } from "react-router";
-
-const menuItems = [
-  { title: "Home", url: "/", icon: Home },
-  { title: "Calendar", url: "/calendar", icon: Calendar },
-  { title: "Settings", url: "/settings", icon: Settings },
-];
+import { Modal } from "../Modal";
+import { usePerfil } from "@/contexts/PerfilContext/usePerfil";
+import { useModal } from "@/hooks/use-modal";
+import { PerfilForm } from "../Modal/PerfilForm";
 
 type AppSidebarProps = {
   onAddMateria?: () => void;
@@ -35,6 +31,8 @@ export function AppSidebar({ onAddMateria }: AppSidebarProps) {
   const navigate = useNavigate();
   const { state } = useSidebar(); // 👈 "expanded" | "collapsed"
   const collapsed = state === "collapsed";
+  const { perfil, salvarPerfil } = usePerfil();
+  const modalPerfil = useModal();
 
   return (
     <Sidebar collapsible="icon">
@@ -118,35 +116,6 @@ export function AppSidebar({ onAddMateria }: AppSidebarProps) {
             )}
           </div>
         </SidebarGroup>
-
-        {/* DIVISOR */}
-        <div className="border-t border-white-flashcard/20" />
-
-        {/* GROUP: NAVEGAÇÃO */}
-        <SidebarGroup className="p-0">
-          {!collapsed && (
-            <SidebarGroupLabel className="text-white-flashcard text-xs">
-              Navegação
-            </SidebarGroupLabel>
-          )}
-
-          <SidebarMenu>
-            {menuItems.map((item) => (
-              <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton
-                  asChild
-                  className={`text-white-flashcard hover:bg-white-flashcard/10 hover:text-white-flashcard ${collapsed ? "justify-center" : ""}`}
-                  title={item.title}
-                >
-                  <a href={item.url} className="flex items-center gap-2">
-                    <item.icon size={18} className="shrink-0" />
-                    {!collapsed && <span>{item.title}</span>}
-                  </a>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            ))}
-          </SidebarMenu>
-        </SidebarGroup>
       </SidebarContent>
 
       {/* FOOTER */}
@@ -154,24 +123,50 @@ export function AppSidebar({ onAddMateria }: AppSidebarProps) {
         <div
           className={`flex items-center gap-3 ${collapsed ? "justify-center" : ""}`}
         >
-          <img
-            src="/img/avatar.jpg"
-            alt="Avatar do usuário"
-            className="h-10 w-10 min-w-10 min-h-10 rounded-full object-cover shrink-0"
-            title="Vinicius"
-          />
+          {/* Avatar com hover para editar */}
+          <div
+            className="relative group cursor-pointer shrink-0"
+            onClick={() => modalPerfil.open()}
+            title="Editar perfil"
+          >
+            {perfil?.avatarUrl ? (
+              <img
+                src={perfil.avatarUrl}
+                alt="Avatar"
+                className="h-10 w-10 min-w-10 min-h-10 rounded-full object-cover"
+              />
+            ) : (
+              <div className="h-10 w-10 min-w-10 min-h-10 rounded-full bg-gray-400 flex items-center justify-center">
+                <UserCircle size={24} className="text-white" />
+              </div>
+            )}
+
+            {/* Caneta aparece no hover */}
+            <div className="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+              <PenIcon size={14} className="text-white" />
+            </div>
+          </div>
 
           {!collapsed && (
             <div className="leading-tight overflow-hidden">
               <p className="text-sm font-semibold text-white-flashcard truncate">
-                Vinicius
+                {perfil?.nome ?? "Usuário"}
               </p>
               <p className="text-xs text-white-flashcard/70 truncate">
-                Engenharia da Computação
+                {perfil?.profissao ?? ""}
               </p>
             </div>
           )}
         </div>
+
+        {/* Modal de edição de perfil */}
+        <Modal isOpen={modalPerfil.isOpen} onClose={modalPerfil.close}>
+          <PerfilForm
+            perfilAtual={perfil}
+            onSalvar={salvarPerfil}
+            onClose={modalPerfil.close}
+          />
+        </Modal>
       </SidebarFooter>
     </Sidebar>
   );

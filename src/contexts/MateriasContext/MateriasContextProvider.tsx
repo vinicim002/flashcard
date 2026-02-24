@@ -56,6 +56,31 @@ export function MateriasContextProvider({
     );
   }
 
+  // Editar deck
+  function handleEditDeck(
+    deckId: string,
+    dadosAtualizados: Partial<DeckModel>,
+  ) {
+    setMaterias((prev) =>
+      prev.map((materia) => ({
+        ...materia,
+        decks: materia.decks.map((deck) =>
+          deck.id === deckId ? { ...deck, ...dadosAtualizados } : deck,
+        ),
+      })),
+    );
+  }
+
+  // Deletar deck
+  function handleDeleteDeck(deckId: string) {
+    setMaterias((prev) =>
+      prev.map((materia) => ({
+        ...materia,
+        decks: materia.decks.filter((deck) => deck.id !== deckId),
+      })),
+    );
+  }
+
   //Adicionar card dentro do deck correto
   function handleAddCard(deckId: string, newCard: CardModel) {
     setMaterias((prev) =>
@@ -73,6 +98,44 @@ export function MateriasContextProvider({
           ),
         };
       }),
+    );
+  }
+
+  // Editar card
+  function handleEditCard(
+    deckId: string,
+    cardId: string,
+    dadosAtualizados: Partial<CardModel>,
+  ) {
+    setMaterias((prev) =>
+      prev.map((materia) => ({
+        ...materia,
+        decks: materia.decks.map((deck) => {
+          if (deck.id !== deckId) return deck;
+          return {
+            ...deck,
+            cards: deck.cards.map((card) =>
+              card.id === cardId ? { ...card, ...dadosAtualizados } : card,
+            ),
+          };
+        }),
+      })),
+    );
+  }
+
+  // Deletar card
+  function handleDeleteCard(deckId: string, cardId: string) {
+    setMaterias((prev) =>
+      prev.map((materia) => ({
+        ...materia,
+        decks: materia.decks.map((deck) => {
+          if (deck.id !== deckId) return deck;
+          return {
+            ...deck,
+            cards: deck.cards.filter((card) => card.id !== cardId),
+          };
+        }),
+      })),
     );
   }
 
@@ -133,6 +196,10 @@ export function MateriasContextProvider({
         handleResponderCard,
         handleEditMateria,
         handleDeleteMateria,
+        handleEditDeck,
+        handleDeleteDeck, 
+        handleEditCard, 
+        handleDeleteCard, 
       }}
     >
       {children}
