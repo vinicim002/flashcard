@@ -43,35 +43,47 @@ export function DeckCard({
   return (
     <>
       <li
-        className="flex mx-36 gap-8 mt-8 hover:bg-primary-flashcard/20 transition rounded-lg p-4 cursor-pointer"
+        className="
+    flex flex-col sm:flex-row gap-4 mt-4 
+    mx-4 md:mx-8 lg:mx-36 
+    bg-white-flashcard text-black-flashcard 
+    p-6 cursor-pointer 
+    rounded-2xl border-2 border-primary-flashcard 
+    transition-all active:scale-[0.98] 
+    hover:bg-primary-flashcard/10 
+    group listaDeck
+  "
         onClick={() => navigate(`/materia/${materiaId}/deck/${id}`)}
       >
-        <div className="flex justify-between items-center w-full gap-4">
-          <div className="containerProgressbar flex flex-col gap-2">
-            <div className="flex flex-col gap-2">
-              <h5 className="text-primary-flashcard font-black text-2xl">
+        <div className="flex justify-between items-start w-full gap-4">
+          <div className="flex flex-col gap-4 w-full">
+            {/* Título e Contador */}
+            <div className="flex flex-col gap-1">
+              <h5 className="text-primary-flashcard font-black text-xl md:text-2xl leading-tight">
                 {nomeDeck}
               </h5>
-              <p>
-                <span>{cardsConcluidos}</span> de <span>{totalCards}</span>{" "}
-                cards concluídos
+              <p className="text-sm md:text-base text-black-flashcard">
+                <span className="font-bold">{cardsConcluidos}</span> de{" "}
+                <span className="font-bold">{totalCards}</span> cards concluídos
               </p>
             </div>
-            <div className="barProgressCardHome w-full">
-              <Progress className="w-[1000px]" value={progresso} />
+
+            {/* Barra de Progresso */}
+            <div className="w-full pr-2">
+              <Progress className="w-full h-3" value={progresso} />
             </div>
           </div>
 
+          {/* Botão de Edição - Com hover isolado */}
           <button
-            className="items-end hover:opacity-70 transition cursor-pointer"
+            className="p-2 hover:bg-black/5 rounded-full transition-colors cursor-pointer shrink-0"
             aria-label="Edit"
-            title="Edit"
             onClick={(e) => {
-              e.stopPropagation(); // 👈 impede navegar ao clicar na caneta
+              e.stopPropagation();
               modal.open();
             }}
           >
-            <PenIcon />
+            <PenIcon size={20} className="text-primary-flashcard" />
           </button>
         </div>
       </li>

@@ -29,7 +29,9 @@ h6 {
 .btnPreviousCard,
 .containerEstatisticaCards,
 .flashcard,
-.btnAddNewDeck {
+.btnAddNewDeck,
+.listaDeck,
+.estatisticaFlashCard {
   box-shadow: 8px 4px 0px rgb(90, 169, 230);
 }
 

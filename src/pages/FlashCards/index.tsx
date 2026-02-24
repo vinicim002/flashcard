@@ -23,10 +23,20 @@ export function FlashCard() {
   }
 
   return (
-    <div className="app w-screen h-screen flex flex-col px-36">
+    <div className="min-h-screen w-full bg-bg-flashcard flex flex-col pb-10">
       <FlashCardHeader onAddCard={() => modal.open("card")} />
 
-      <section className="mainContainer flex flex-1 justify-center items-center gap-3">
+      {/* min-[1200px]:flex-row -> Só fica lado a lado a partir de 1200px
+         max-w-[1600px] e mx-auto -> Evita que em telas gigantes o layout espalhe demais
+      */}
+      <section
+        className="
+        flex flex-col min-[1200px]:flex-row 
+        flex-1 justify-center items-center min-[1200px]:items-start 
+        gap-8 mt-8 px-4 md:px-8 xl:px-36 
+        max-w-[1600px] mx-auto w-full
+      "
+      >
         <FlashCardMain />
         <Estatisticas />
       </section>

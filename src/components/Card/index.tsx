@@ -61,64 +61,63 @@ export function Card({
 
   return (
     <div
-      className="card-container h-[420px] cursor-pointer"
+      className="card-container w-full h-[450px] md:h-[420px] cursor-pointer"
       onClick={handleVirarCard}
     >
       <div className={`card-inner ${virado ? "virado" : ""}`}>
         {/* ===== FRENTE ===== */}
         <article
-          className="card-frente flashcard bg-secondary-flashcard rounded-2xl p-6 flex flex-col justify-between border-4 border-primary-flashcard"
+          className="card-frente flashcard bg-secondary-flashcard rounded-3xl p-4 md:p-6 flex flex-col justify-between border-4 border-primary-flashcard shadow-xl"
           style={{
             backgroundImage: `url(${gradeBg})`,
             backgroundSize: "cover",
             backgroundRepeat: "no-repeat",
           }}
         >
-          <div className="flex justify-between items-center">
-            <div className="categoriaFlashCard flex items-center justify-center bg-white-flashcard text-black-flashcard px-4 py-2 rounded-2xl border-2 border-primary-flashcard w-80">
+          <div className="flex justify-between items-start gap-2">
+            {/* Ajustado w-80 para w-full max-w-[280px] */}
+            <div className="categoriaFlashCard flex items-center justify-center bg-white-flashcard text-black-flashcard px-3 py-2 rounded-xl border-2 border-primary-flashcard w-full max-w-[200px] md:max-w-[320px] text-xs md:text-sm font-bold truncate">
               {deck.nome}
             </div>
 
-            {/* 👇 Ícone de dica — só aparece se o card tiver dica */}
             {cardAtual.dica && (
               <div
                 onClick={(e) => {
-                  e.stopPropagation(); // impede virar o card
+                  e.stopPropagation();
                   setDicaVisivel((prev) => !prev);
                 }}
-                className={`p-2 rounded-full border-2 transition cursor-pointer ${
+                className={`p-2 rounded-full border-2 transition shrink-0 ${
                   dicaVisivel
                     ? "bg-yellow-300 border-yellow-500 text-yellow-800"
                     : "bg-white-flashcard border-primary-flashcard text-primary-flashcard hover:bg-yellow-50"
                 }`}
-                title="Ver dica"
               >
                 <LightbulbIcon size={20} />
               </div>
             )}
           </div>
 
-          <div className="flex flex-col justify-center items-center gap-2 flex-1 mt-4">
-            <h2 className="font-black text-6xl text-center">
+          <div className="flex flex-col justify-center items-center gap-4 flex-1 my-4 px-2">
+            {/* Fonte responsiva: 4xl no mobile, 6xl no desktop */}
+            <h2 className="font-black text-3xl md:text-5xl lg:text-6xl text-center leading-tight break-words w-full">
               {cardAtual.frente}
             </h2>
 
-            {/* 👇 Dica aparece aqui quando ativada */}
             {dicaVisivel && cardAtual.dica ? (
-              <div className="flex items-center gap-2 bg-yellow-50 border border-yellow-300 text-yellow-800 text-sm px-4 py-2 rounded-xl mt-2">
-                <LightbulbIcon size={14} />
+              <div className="flex items-center gap-2 bg-yellow-50 border border-yellow-300 text-yellow-900 text-xs md:text-sm px-4 py-2 rounded-xl animate-in fade-in zoom-in duration-200">
+                <LightbulbIcon size={14} className="shrink-0" />
                 <span>{cardAtual.dica}</span>
               </div>
             ) : (
-              <p className="text-sm text-gray-400">
-                Click para revelar a resposta
+              <p className="text-[10px] md:text-xs text-gray-400 uppercase tracking-widest font-bold">
+                Toque para revelar
               </p>
             )}
           </div>
 
-          <div className="flex items-center justify-center gap-4">
-            <Progress value={progresso} />
-            <div>
+          <div className="flex items-center justify-center gap-3">
+            <Progress value={progresso} className="h-2 md:h-3" />
+            <div className="text-xs md:text-sm font-bold min-w-[40px]">
               {indiceAtual + 1}/{cardsDisponiveis.length}
             </div>
           </div>
@@ -126,7 +125,7 @@ export function Card({
 
         {/* ===== VERSO ===== */}
         <article
-          className="card-verso flashcard bg-secondary-flashcard rounded-2xl p-6 flex flex-col justify-between border-4 border-primary-flashcard"
+          className="card-verso flashcard bg-secondary-flashcard rounded-3xl p-4 md:p-6 flex flex-col justify-between border-4 border-primary-flashcard shadow-xl"
           style={{
             backgroundImage: `url(${gradeBg})`,
             backgroundSize: "cover",
@@ -134,15 +133,20 @@ export function Card({
           }}
         >
           <div className="flex justify-center">
-            <div className="categoriaFlashCard flex items-center justify-center bg-white-flashcard text-black-flashcard px-4 py-2 rounded-2xl border-2 border-primary-flashcard w-80">
+            <div className="categoriaFlashCard flex items-center justify-center bg-white-flashcard text-black-flashcard px-3 py-2 rounded-xl border-2 border-primary-flashcard w-full max-w-[200px] md:max-w-[320px] text-xs md:text-sm font-bold truncate">
               {deck.nome}
             </div>
           </div>
 
-          <div className="flex flex-col justify-center items-center gap-2 flex-1 mt-4">
-            <p className="font-medium text-lg text-center">{cardAtual.verso}</p>
-            <p className="text-sm text-gray-400">Click para voltar</p>
-            <div onClick={(e) => e.stopPropagation()}>
+          <div className="flex flex-col justify-center items-center gap-6 flex-1 mt-4">
+            <p className="font-bold text-lg md:text-2xl text-center px-2">
+              {cardAtual.verso}
+            </p>
+
+            <div
+              onClick={(e) => e.stopPropagation()}
+              className="w-full flex justify-center"
+            >
               <BtnEuSeiNaoSei
                 onEuSei={handleEuSei}
                 onEuNaoSei={handleEuNaoSei}
@@ -150,9 +154,9 @@ export function Card({
             </div>
           </div>
 
-          <div className="flex items-center justify-center gap-4">
-            <Progress value={progresso} />
-            <div>
+          <div className="flex items-center justify-center gap-3">
+            <Progress value={progresso} className="h-2 md:h-3" />
+            <div className="text-xs md:text-sm font-bold min-w-[40px]">
               {indiceAtual + 1}/{cardsDisponiveis.length}
             </div>
           </div>

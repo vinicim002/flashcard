@@ -40,37 +40,70 @@ export function FlashCardMain() {
   }
 
   return (
-    <section className="containerFlashcard flex flex-col bg-bg-flashcard border-4 border-primary-flashcard rounded-2xl p-5 w-2/3 h-[730px] gap-y-10">
-      {/* 👇 Passa o estado e o handler */}
-      <DropDownCategoria
-        esconderMasterizadas={esconderMasterizadas}
-        onToggleEsconderMasterizadas={setEsconderMasterizadas}
-      />
+    <section
+      className="
+      containerFlashcard flex flex-col 
+      bg-bg-flashcard border-4 border-primary-flashcard rounded-3xl 
+      p-4 md:p-8 
+      w-full min-[1200px]:w-2/3 /* 👈 100% no mobile, 66% após 1200px */
+      min-h-[500px] min-[1200px]:h-[730px] 
+      justify-between gap-y-6
+    "
+    >
+      {/* Header do Flashcard (Filtros/Dropdown) */}
+      <div className="w-full flex">
+        <DropDownCategoria
+          esconderMasterizadas={esconderMasterizadas}
+          onToggleEsconderMasterizadas={setEsconderMasterizadas}
+        />
+      </div>
 
-      <Card
-        deck={deck}
-        cardsDisponiveis={cardsDisponiveis}
-        indiceAtual={indiceSeguro}
-        onProximo={handleProximo}
-      />
+      {/* Área Central (O Card em si) */}
+      <div className="flex-grow flex items-center justify-center w-full">
+        <Card
+          deck={deck}
+          cardsDisponiveis={cardsDisponiveis}
+          indiceAtual={indiceSeguro}
+          onProximo={handleProximo}
+        />
+      </div>
 
-      <div className="buttonsVoltarProximo flex justify-between items-center">
+      {/* Navegação Inferior */}
+      <div className="buttonsVoltarProximo flex flex-col sm:flex-row justify-between items-center gap-4 mt-auto">
         <button
           onClick={handleAnterior}
           disabled={totalCards === 0}
-          className="btnNextCard bg-white-flashcard text-black-flashcard px-4 py-2 pr-5 rounded-2xl border-2 border-primary-flashcard cursor-pointer disabled:opacity-50"
+          className="
+            w-full sm:w-auto
+            bg-white-flashcard text-black-flashcard 
+            px-8 py-3 rounded-2xl border-2 border-primary-flashcard 
+            cursor-pointer disabled:opacity-50 
+            active:scale-95 transition-transform
+            font-bold
+          "
         >
-          Voltar
+          Anterior
         </button>
 
-        <p>
-          Card {totalCards === 0 ? 0 : indiceSeguro + 1} de {totalCards}
+        <p className="text-black-flashcard font-medium order-first sm:order-none">
+          Card{" "}
+          <span className="text-primary-flashcard font-bold">
+            {totalCards === 0 ? 0 : indiceSeguro + 1}
+          </span>{" "}
+          de <span className="font-bold">{totalCards}</span>
         </p>
 
         <button
           onClick={handleProximo}
           disabled={totalCards === 0}
-          className="btnPreviousCard bg-white-flashcard text-black-flashcard px-4 py-2 pr-5 rounded-2xl border-2 border-primary-flashcard cursor-pointer disabled:opacity-50"
+          className="
+            w-full sm:w-auto
+            bg-white-flashcard text-black-flashcard 
+            px-8 py-3 rounded-2xl border-2 border-primary-flashcard 
+            cursor-pointer disabled:opacity-50 
+            active:scale-95 transition-transform
+            font-bold
+          "
         >
           Próximo
         </button>
