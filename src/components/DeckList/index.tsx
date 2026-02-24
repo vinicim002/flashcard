@@ -16,7 +16,7 @@ export function DeckList({ decks, materiaId }: DeckListProps) {
           materiaId={materiaId}
           nomeDeck={deck.nome}
           totalCards={deck.cards.length}
-          cardsConcluidos={deck.cards.filter((card) => card.concluido).length}
+          cardsConcluidos={deck.cards.filter((card) => card.masterizado).length} // 👈
         />
       ))}
     </ul>

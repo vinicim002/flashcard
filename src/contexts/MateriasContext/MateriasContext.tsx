@@ -8,6 +8,16 @@ type MateriasContextProps = {
   handleAddMateria: (newMateria: MateriaModel) => void;
   handleAddDeck: (materiaId: string, newDeck: DeckModel) => void;
   handleAddCard: (deckId: string, newCard: CardModel) => void;
+  handleResponderCard: (
+    deckId: string,
+    cardId: string,
+    acertou: boolean,
+  ) => void;
+  handleEditMateria: (
+    materiaId: string,
+    dadosAtualizados: Partial<MateriaModel>,
+  ) => void; // 👈
+  handleDeleteMateria: (materiaId: string) => void;
 };
 
 export const MateriasContext = createContext({} as MateriasContextProps);

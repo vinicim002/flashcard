@@ -9,6 +9,7 @@ import {
   SidebarGroupAction,
   SidebarMenu,
   SidebarMenuButton,
+  useSidebar, // 👈
 } from "@/components/ui/sidebar";
 
 import { Home, Calendar, Settings, PlusIcon, TreesIcon } from "lucide-react";
@@ -32,80 +33,114 @@ type AppSidebarProps = {
 export function AppSidebar({ onAddMateria }: AppSidebarProps) {
   const { materias } = useMateriasContext();
   const navigate = useNavigate();
+  const { state } = useSidebar(); // 👈 "expanded" | "collapsed"
+  const collapsed = state === "collapsed";
 
   return (
     <Sidebar collapsible="icon">
       {/* HEADER */}
       <SidebarHeader className="bg-navbar-flashcard">
-        <SidebarMenuItem className="flex p-2">
-          <img src="/img/logoCompletaAmarela.svg" alt="Logo" className="h-12" />
+        <SidebarMenuItem className="flex items-center justify-center p-2">
+          {collapsed ? ( // 👈 troca por condicional JS
+            <img
+              src="/img/logoIcone.svg"
+              alt="Logo"
+              className="h-8 w-8 shrink-0"
+            />
+          ) : (
+            <img
+              src="/img/logoCompletaAmarela.svg"
+              alt="Logo"
+              className="h-12"
+            />
+          )}
         </SidebarMenuItem>
       </SidebarHeader>
 
       {/* CONTENT */}
       <SidebarContent className="bg-navbar-flashcard px-3 py-3 space-y-6">
-        {/* SEARCH */}
-        <SearchInput />
+        {/* SEARCH — só no modo expandido */}
+        {!collapsed && <SearchInput />}
 
         {/* GROUP: MATÉRIAS */}
         <SidebarGroup className="p-0">
-          <SidebarGroupLabel className="relative text-white-flashcard text-base p-0">
-            <span className="group-data-[collapsible=icon]:hidden">
+          {!collapsed && (
+            <SidebarGroupLabel className="relative text-white-flashcard text-base p-0">
               Matérias
-            </span>
+              <SidebarGroupAction
+                title="Adicionar Matéria"
+                className="absolute right-0 top-1/2 -translate-y-1/2"
+                onClick={onAddMateria}
+              >
+                <PlusIcon size={16} />
+              </SidebarGroupAction>
+            </SidebarGroupLabel>
+          )}
 
-            <SidebarGroupAction
-              title="Adicionar Matéria"
-              className="absolute right-0 top-1/2 -translate-y-1/2"
-              onClick={onAddMateria}
-            >
-              <PlusIcon size={16} />
-            </SidebarGroupAction>
-          </SidebarGroupLabel>
-
-          {/* LISTA DE MATÉRIAS */}
           <div className="mt-4 space-y-2">
             {materias.map((materia) => (
               <button
                 key={materia.id}
-                className="w-full flex items-center gap-3 p-2 rounded-lg text-left hover:bg-white-flashcard/5 transition cursor-pointer"
+                className={`w-full flex items-center gap-3 p-2 rounded-lg text-left hover:bg-white-flashcard/5 transition cursor-pointer ${collapsed ? "justify-center" : ""}`}
                 onClick={() => navigate(`/materia/${materia.id}`)}
+                title={materia.nome}
               >
                 <LogoDaMateria
                   icon={<TreesIcon size={16} />}
-                  className={"p-2"}
+                  className="p-2 shrink-0"
                   style={{ backgroundColor: materia.cor }}
                 />
 
-                <div className="flex-1">
-                  <p className="text-base font-medium text-white-flashcard group-data-[collapsible=icon]:hidden">
-                    {materia.nome}
-                  </p>
-                  <Progress
-                    value={70}
-                    className="h-1 mt-1 w-full group-data-[collapsible=icon]:hidden"
-                  />
-                </div>
+                {!collapsed && (
+                  <div className="flex-1 overflow-hidden">
+                    <p className="text-base font-medium text-white-flashcard truncate">
+                      {materia.nome}
+                    </p>
+                    <Progress value={70} className="h-1 mt-1 w-full" />
+                  </div>
+                )}
               </button>
             ))}
+
+            {/* Botão + no modo colapsado */}
+            {collapsed && (
+              <button
+                className="w-full flex items-center justify-center p-2 rounded-lg cursor-pointer text-white-flashcard"
+                onClick={onAddMateria}
+                title="Adicionar Matéria"
+              >
+                <LogoDaMateria
+                  icon={<PlusIcon size={16} />}
+                  className="p-2 shrink-0"
+                  style={{ backgroundColor: "rgba(255,255,255,0.15)" }}
+                />
+              </button>
+            )}
           </div>
         </SidebarGroup>
 
+        {/* DIVISOR */}
+        <div className="border-t border-white-flashcard/20" />
+
         {/* GROUP: NAVEGAÇÃO */}
         <SidebarGroup className="p-0">
-          <SidebarGroupLabel className="text-white-flashcard text-xs">
-            Navegação
-          </SidebarGroupLabel>
+          {!collapsed && (
+            <SidebarGroupLabel className="text-white-flashcard text-xs">
+              Navegação
+            </SidebarGroupLabel>
+          )}
 
           <SidebarMenu>
             {menuItems.map((item) => (
               <SidebarMenuItem key={item.title}>
-                <SidebarMenuButton asChild>
-                  <a href={item.url}>
-                    <item.icon size={18} />
-                    <span className="group-data-[collapsible=icon]:hidden">
-                      {item.title}
-                    </span>
+                <SidebarMenuButton
+                  asChild
+                  className={`text-white-flashcard hover:bg-white-flashcard/10 hover:text-white-flashcard ${collapsed ? "justify-center" : ""}`}
+                  title={item.title}
+                >
+                  <a href={item.url} className="flex items-center gap-2">
+                    <item.icon size={18} className="shrink-0" />
+                    {!collapsed && <span>{item.title}</span>}
                   </a>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -115,24 +150,27 @@ export function AppSidebar({ onAddMateria }: AppSidebarProps) {
       </SidebarContent>
 
       {/* FOOTER */}
-      <SidebarFooter className="bg-navbar-flashcard px-4 py-3 border-t-2 border-white-flashcard">
-        <div className="flex items-center gap-3">
-          {/* Avatar */}
+      <SidebarFooter className="bg-navbar-flashcard px-4 py-3 border-t-2 border-white-flashcard/20">
+        <div
+          className={`flex items-center gap-3 ${collapsed ? "justify-center" : ""}`}
+        >
           <img
             src="/img/avatar.jpg"
             alt="Avatar do usuário"
-            className="h-12 w-12 rounded-full object-cover"
+            className="h-10 w-10 min-w-10 min-h-10 rounded-full object-cover shrink-0"
+            title="Vinicius"
           />
 
-          {/* Info do usuário */}
-          <div className="leading-tight group-data-[collapsible=icon]:hidden">
-            <p className="text-sm font-semibold text-white-flashcard">
-              Vinicius
-            </p>
-            <p className="text-xs text-white-flashcard/70">
-              Engenharia da Computação
-            </p>
-          </div>
+          {!collapsed && (
+            <div className="leading-tight overflow-hidden">
+              <p className="text-sm font-semibold text-white-flashcard truncate">
+                Vinicius
+              </p>
+              <p className="text-xs text-white-flashcard/70 truncate">
+                Engenharia da Computação
+              </p>
+            </div>
+          )}
         </div>
       </SidebarFooter>
     </Sidebar>

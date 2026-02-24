@@ -3,5 +3,8 @@ export type CardModel = {
   frente: string;
   verso: string;
   dica: string;
-  concluido: boolean;
+
+  acertosConsecutivos: number;
+  proximaRevisao: number; // timestamp
+  masterizado: boolean;
 };

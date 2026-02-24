@@ -2,7 +2,7 @@ import { MateriaHeader } from "@/components/MateriaHeader";
 import { DeckList } from "@/components/DeckList";
 import { DeckListHeader } from "@/components/DeckListHeader";
 import { MainLayout } from "@/Layout/MainLayout";
-import { Modal } from "@/components/Modal";
+
 import { useModal } from "@/hooks/use-modal";
 import { AddMateriaForm } from "@/components/Modal/AddMateriaForm";
 import type { MateriaModel } from "@/models/MateriaModel";
@@ -10,6 +10,8 @@ import { useMateriasContext } from "@/contexts/MateriasContext/useMaterias";
 import { useParams } from "react-router";
 import { AddDeckForm } from "@/components/Modal/AddDeckForm";
 import type { DeckModel } from "@/models/DeckModel";
+import { Dashboard } from "@/components/Dashboard";
+import { Modal } from "@/components/Modal";
 
 export function Home() {
   const { materias, handleAddMateria, handleAddDeck } = useMateriasContext();
@@ -35,7 +37,7 @@ export function Home() {
     <MainLayout onAddMateria={() => modal.open("materia")}>
       <div className="mainContent">
         {!materiaAtual ? (
-          <div>Selecione uma materia</div>
+          <Dashboard materias={materias} />
         ) : (
           <>
             <MateriaHeader materiaAtual={materiaAtual} />

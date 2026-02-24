@@ -33,7 +33,7 @@ export function FlashCard() {
 
       <Modal isOpen={modal.isOpen} onClose={modal.close}>
         {modal.data === "card" && (
-          <AddCardForm onSubmitCard={handleSubmitCard} />
+          <AddCardForm onSubmitCard={handleSubmitCard} onClose={modal.close} />
         )}
       </Modal>
     </div>

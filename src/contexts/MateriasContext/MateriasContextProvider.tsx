@@ -26,6 +26,25 @@ export function MateriasContextProvider({
     setMaterias((prev) => [...prev, newMateria]);
   }
 
+  // Editar matéria
+  function handleEditMateria(
+    materiaId: string,
+    dadosAtualizados: Partial<MateriaModel>,
+  ) {
+    setMaterias((prev) =>
+      prev.map((materia) =>
+        materia.id === materiaId
+          ? { ...materia, ...dadosAtualizados }
+          : materia,
+      ),
+    );
+  }
+
+  // Deletar matéria
+  function handleDeleteMateria(materiaId: string) {
+    setMaterias((prev) => prev.filter((materia) => materia.id !== materiaId));
+  }
+
   // Adicionar deck dentro da matéria correta
   function handleAddDeck(materiaId: string, newDeck: DeckModel) {
     setMaterias((prev) =>
@@ -57,6 +76,48 @@ export function MateriasContextProvider({
     );
   }
 
+  //Responder Card
+  function handleResponderCard(
+    deckId: string,
+    cardId: string,
+    acertou: boolean,
+  ) {
+    setMaterias((prev) =>
+      prev.map((materia) => ({
+        ...materia,
+        decks: materia.decks.map((deck) => {
+          if (deck.id !== deckId) return deck;
+
+          return {
+            ...deck,
+            cards: deck.cards.map((card) => {
+              if (card.id !== cardId) return card;
+
+              const agora = Date.now();
+
+              if (acertou) {
+                const novosAcertos = card.acertosConsecutivos + 1;
+
+                return {
+                  ...card,
+                  acertosConsecutivos: novosAcertos,
+                  proximaRevisao: agora + 24 * 60 * 60 * 1000,
+                  masterizado: novosAcertos >= 5,
+                };
+              } else {
+                return {
+                  ...card,
+                  acertosConsecutivos: 0,
+                  proximaRevisao: agora + 5 * 60 * 1000,
+                };
+              }
+            }),
+          };
+        }),
+      })),
+    );
+  }
+
   // Persistência
   useEffect(() => {
     localStorage.setItem("materias", JSON.stringify(materias));
@@ -69,6 +130,9 @@ export function MateriasContextProvider({
         handleAddMateria,
         handleAddDeck,
         handleAddCard,
+        handleResponderCard,
+        handleEditMateria,
+        handleDeleteMateria,
       }}
     >
       {children}
