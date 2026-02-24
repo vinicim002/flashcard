@@ -2,7 +2,6 @@ import { MateriaHeader } from "@/components/MateriaHeader";
 import { DeckList } from "@/components/DeckList";
 import { DeckListHeader } from "@/components/DeckListHeader";
 import { MainLayout } from "@/Layout/MainLayout";
-
 import { useModal } from "@/hooks/use-modal";
 import { AddMateriaForm } from "@/components/Modal/AddMateriaForm";
 import type { MateriaModel } from "@/models/MateriaModel";
@@ -47,10 +46,10 @@ export function Home() {
         )}
         <Modal isOpen={modal.isOpen} onClose={modal.close}>
           {modal.data === "materia" && (
-            <AddMateriaForm onSubmit={handleSubmitMateria} />
+            <AddMateriaForm onSubmit={handleSubmitMateria} onClose={modal.close}/>
           )}
           {modal.data === "deck" && (
-            <AddDeckForm onSubmitDeck={handleSubmitDeck} />
+            <AddDeckForm onSubmitDeck={handleSubmitDeck} onClose={modal.close}/>
           )}
         </Modal>
       </div>
