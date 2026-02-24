@@ -2,7 +2,7 @@ import { useMateriasContext } from "@/contexts/MateriasContext/useMaterias";
 import { Card } from "../Card";
 import { DropDownCategoria } from "../DropDownCategoria";
 import { useParams } from "react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 export function FlashCardMain() {
   "use no memo";
@@ -10,7 +10,13 @@ export function FlashCardMain() {
   const { materias } = useMateriasContext();
   const params = useParams();
   const [indiceAtual, setIndiceAtual] = useState(0);
-  const [esconderMasterizadas, setEsconderMasterizadas] = useState(false); // 👈
+  const [esconderMasterizadas, setEsconderMasterizadas] = useState(false);
+  const [agora, setAgora] = useState(() => Date.now()); // ✅ inicializador lazy — linter aceita
+
+  useEffect(() => {
+    const intervalo = setInterval(() => setAgora(Date.now()), 60_000);
+    return () => clearInterval(intervalo);
+  }, []);
 
   const deck = useMemo(() => {
     return materias.flatMap((m) => m.decks).find((d) => d.id === params.deckId);
@@ -20,13 +26,13 @@ export function FlashCardMain() {
     if (!deck) return [];
 
     return deck.cards.filter((card) => {
-      if (esconderMasterizadas && card.masterizado) return false; // 👈 filtro
+      if (esconderMasterizadas && card.masterizado) return false;
       return (
         !card.masterizado &&
-        (!card.proximaRevisao || card.proximaRevisao <= Date.now())
+        (!card.proximaRevisao || card.proximaRevisao <= agora) // ✅ usa estado
       );
     });
-  }, [deck, esconderMasterizadas]);
+  }, [deck, esconderMasterizadas, agora]);
 
   const totalCards = cardsDisponiveis.length;
   const indiceSeguro = indiceAtual < totalCards ? indiceAtual : 0;
@@ -45,12 +51,11 @@ export function FlashCardMain() {
       containerFlashcard flex flex-col 
       bg-bg-flashcard border-4 border-primary-flashcard rounded-3xl 
       p-4 md:p-8 
-      w-full min-[1200px]:w-2/3 /* 👈 100% no mobile, 66% após 1200px */
+      w-full min-[1200px]:w-2/3
       min-h-[500px] min-[1200px]:h-[730px] 
       justify-between gap-y-6
     "
     >
-      {/* Header do Flashcard (Filtros/Dropdown) */}
       <div className="w-full flex">
         <DropDownCategoria
           esconderMasterizadas={esconderMasterizadas}
@@ -58,7 +63,6 @@ export function FlashCardMain() {
         />
       </div>
 
-      {/* Área Central (O Card em si) */}
       <div className="flex-grow flex items-center justify-center w-full">
         <Card
           deck={deck}
@@ -68,7 +72,6 @@ export function FlashCardMain() {
         />
       </div>
 
-      {/* Navegação Inferior */}
       <div className="buttonsVoltarProximo flex flex-col sm:flex-row justify-between items-center gap-4 mt-auto">
         <button
           onClick={handleAnterior}

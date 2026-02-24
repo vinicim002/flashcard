@@ -20,7 +20,7 @@ export function AddCardForm({ onSubmitCard, onClose }: AddCardFormProps) {
       verso: versoCard,
       dica: dicaCard,
       acertosConsecutivos: 0,
-      proximaRevisao: Date.now(),
+      proximaRevisao: 0,
       masterizado: false,
     };
     onSubmitCard(newCard);
