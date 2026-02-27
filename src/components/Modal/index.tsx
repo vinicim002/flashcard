@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from "react";
-import type { TouchEvent, ReactNode } from "react";
+import { useEffect, useRef, useState } from "react";
+import type { ReactNode, TouchEvent } from "react";
 
 type ModalProps = {
   isOpen: boolean;
@@ -7,24 +7,15 @@ type ModalProps = {
   children: ReactNode;
 };
 
-export function Modal({ children, isOpen, onClose }: ModalProps) {
+type ModalContentProps = {
+  onClose: () => void;
+  children: ReactNode;
+};
+
+function ModalContent({ children, onClose }: ModalContentProps) {
   const [touchStartY, setTouchStartY] = useState<number | null>(null);
   const [dragY, setDragY] = useState(0);
   const contentRef = useRef<HTMLDivElement>(null);
-  const modalRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [isOpen]);
-
-  if (!isOpen) return null;
 
   function handleTouchStart(e: TouchEvent) {
     setTouchStartY(e.touches[0].clientY);
@@ -35,13 +26,14 @@ export function Modal({ children, isOpen, onClose }: ModalProps) {
     const currentY = e.touches[0].clientY;
     const diff = currentY - touchStartY;
     const scrollTop = contentRef.current?.scrollTop ?? 0;
-    if (scrollTop <= 0 && diff > 0) {
+    if (scrollTop <= 0 && diff > 10) {
       setDragY(diff);
     }
   }
 
   function handleTouchEnd() {
-    if (dragY > 120) {
+    if (dragY > 150) {
+      setDragY(0);
       onClose();
     } else {
       setDragY(0);
@@ -51,7 +43,6 @@ export function Modal({ children, isOpen, onClose }: ModalProps) {
 
   return (
     <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center">
-      {/* Overlay — só fecha se clicar diretamente nele */}
       <div
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
         onMouseDown={(e) => {
@@ -62,18 +53,19 @@ export function Modal({ children, isOpen, onClose }: ModalProps) {
         }}
       />
 
-      {/* Modal */}
       <div
-        ref={modalRef}
         onTouchStart={(e) => {
-          e.stopPropagation(); // 👈 impede overlay de capturar toques do modal
+          e.stopPropagation();
           handleTouchStart(e);
         }}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
         style={{
           transform: `translateY(${dragY}px)`,
-          transition: dragY === 0 ? "transform 0.2s ease" : "none",
+          transition:
+            dragY === 0
+              ? "transform 0.3s cubic-bezier(0.32, 0.72, 0, 1)"
+              : "none",
         }}
         className="
           relative w-full bg-white
@@ -85,12 +77,10 @@ export function Modal({ children, isOpen, onClose }: ModalProps) {
           z-[101]
         "
       >
-        {/* Barra de arraste (mobile) */}
         <div className="flex justify-center py-4 sm:hidden shrink-0">
           <div className="w-16 h-1.5 bg-gray-300 rounded-full" />
         </div>
 
-        {/* Conteúdo scrollável */}
         <div
           ref={contentRef}
           className="flex-1 overflow-y-auto px-6 pb-12 pt-2 sm:pt-6"
@@ -104,4 +94,19 @@ export function Modal({ children, isOpen, onClose }: ModalProps) {
       </div>
     </div>
   );
+}
+
+export function Modal({ children, isOpen, onClose }: ModalProps) {
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
+
+  // 👇 quando isOpen vira false, ModalContent é desmontado
+  // e todos os estados (dragY, touchStartY) são resetados automaticamente
+  if (!isOpen) return null;
+
+  return <ModalContent onClose={onClose}>{children}</ModalContent>;
 }
