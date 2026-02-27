@@ -30,6 +30,7 @@ export function AddMateriaForm({ onSubmit, onClose }: AddMateriaFormProps) {
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
+
     if (!nomeMateria.trim() || nomeMateria.trim().length < 3) {
       showMessage.error("A matéria deve ter pelo menos 3 caracteres.");
       return;
@@ -49,87 +50,94 @@ export function AddMateriaForm({ onSubmit, onClose }: AddMateriaFormProps) {
   }
 
   return (
-    <div className="flex flex-col w-full h-full">
+    <div className="flex flex-col w-full">
       {/* Header */}
-      <div className="mb-4 shrink-0">
-        <h2 className="text-xl font-bold text-gray-800 tracking-tight">
+      <div className="mb-6 shrink-0">
+        <h2 className="text-2xl font-black text-gray-800 tracking-tight">
           Nova Matéria
         </h2>
-        <p className="text-sm text-gray-500">Personalize com ícone e cor</p>
+        <p className="text-sm text-gray-500 font-medium">
+          Configure o visual da disciplina
+        </p>
       </div>
 
       {/* Preview */}
       <div
-        className="w-full h-20 rounded-2xl mb-6 flex items-center justify-center gap-3 shadow-inner shrink-0"
+        className="w-full h-24 rounded-3xl mb-8 flex items-center justify-center gap-4 shadow-inner shrink-0"
         style={{ backgroundColor: corMateria }}
       >
-        <div className="bg-white/20 p-2 rounded-lg backdrop-blur-sm">
+        <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-md">
           <PreviewIcone
             nome={icone}
-            size={32}
+            size={36}
             className="text-white drop-shadow-md"
           />
         </div>
-        <span className="text-white font-bold text-xl drop-shadow-md truncate max-w-[70%]">
+        <span className="text-white font-bold text-xl drop-shadow-md truncate max-w-[60%]">
           {nomeMateria.trim() || "Nova Matéria"}
         </span>
       </div>
 
-      {/* Inputs - Sem travas de scroll interno que conflitam com o modal */}
-      <form className="space-y-6" onSubmit={handleSubmit}>
-        <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-semibold text-gray-700 ml-1">
+      <form className="space-y-8" onSubmit={handleSubmit}>
+        {/* Nome com fix de zoom do iOS */}
+        <div className="flex flex-col gap-2">
+          <label className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">
             Nome da matéria
           </label>
           <input
             type="text"
             required
-            placeholder="Ex: Programação React"
+            placeholder="Ex: Anatomia Humana"
             value={nomeMateria}
             onChange={(e) => setNomeMateria(e.target.value)}
-            // text-base impede o zoom automático do iOS ao focar
-            className="w-full rounded-xl border border-gray-300 px-4 py-3 text-base md:text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 bg-white"
+            // text-[16px] impede o zoom forçado do navegador mobile
+            className="w-full rounded-2xl border-2 border-gray-100 bg-gray-50 px-4 py-4 text-[16px] md:text-sm outline-none transition-all focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10"
           />
         </div>
 
-        <div className="flex items-center justify-between bg-gray-50 p-4 rounded-2xl border border-gray-100">
+        {/* Seletor de Cor */}
+        <div className="flex items-center justify-between bg-gray-50 p-4 rounded-3xl border-2 border-gray-100">
           <div className="flex flex-col">
-            <label className="text-sm font-semibold text-gray-700">Cor</label>
-            <span className="text-xs text-gray-400 font-mono">
-              {corMateria.toUpperCase()}
+            <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">
+              Cor
+            </label>
+            <span className="text-sm font-bold text-gray-700 font-mono uppercase">
+              {corMateria}
             </span>
           </div>
           <input
             type="color"
             value={corMateria}
             onChange={(e) => setCorMateria(e.target.value)}
-            className="h-12 w-16 cursor-pointer rounded-lg border-2 border-white shadow-sm transition-transform active:scale-90"
+            className="h-14 w-14 cursor-pointer rounded-full border-4 border-white shadow-lg overflow-hidden transition-transform active:scale-90"
           />
         </div>
 
-        <div className="flex flex-col gap-1.5">
-          <label className="text-sm font-semibold text-gray-700 ml-1">
-            Ícone
+        {/* Picker de Ícones */}
+        <div className="flex flex-col gap-2">
+          <label className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">
+            Escolha um ícone
           </label>
-          <div className="rounded-2xl border border-gray-200 p-2 bg-white shadow-sm overflow-hidden">
+          <div className="rounded-3xl border-2 border-gray-100 p-4 bg-white shadow-sm overflow-hidden">
+            {/* Importante: O IconePicker deve ser apenas um container de botões */}
             <IconePicker value={icone} cor={corMateria} onChange={setIcone} />
           </div>
         </div>
 
-        {/* Botões - Fora de um footer fixo para que o teclado não os cubra */}
-        <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-4 border-t border-gray-100">
+        {/* Botões empilhados no mobile para facilitar o toque */}
+        <div className="flex flex-col gap-3 pt-6 border-t border-gray-100">
+          <button
+            type="submit"
+            className="w-full bg-blue-600 text-white py-5 rounded-2xl font-black text-sm shadow-xl shadow-blue-500/20 active:scale-95 transition-all flex items-center justify-center gap-2"
+          >
+            <Save size={20} /> CRIAR MATÉRIA
+          </button>
           <button
             type="button"
             onClick={onClose}
-            className="w-full sm:w-auto rounded-xl px-6 py-3 text-sm font-bold text-gray-400 hover:bg-gray-100"
+            className="w-full py-4 text-sm font-bold text-gray-400 hover:text-gray-600 active:bg-gray-50 rounded-2xl transition-colors"
           >
             Cancelar
-          </button>
-          <button
-            type="submit"
-            className="w-full sm:w-auto rounded-xl bg-blue-600 px-8 py-3 text-sm font-bold text-white hover:bg-blue-700 shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2"
-          >
-            <Save size={18} /> Criar Matéria
           </button>
         </div>
       </form>
