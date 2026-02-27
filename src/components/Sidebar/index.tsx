@@ -1,25 +1,23 @@
+import { PenIcon, PlusIcon, UserCircle } from "lucide-react";
+import { Modal } from "../Modal";
+import { PerfilForm } from "../Modal/PerfilForm";
 import {
   Sidebar,
-  SidebarHeader,
   SidebarContent,
   SidebarFooter,
-  SidebarMenuItem,
   SidebarGroup,
   SidebarGroupLabel,
+  SidebarHeader,
+  SidebarMenuItem,
   useSidebar,
-} from "@/components/ui/sidebar";
-
-import { PenIcon, PlusIcon, UserCircle } from "lucide-react";
-
-import { SearchInput } from "../Search";
+} from "../ui/sidebar";
+import { Progress } from "@radix-ui/react-progress";
 import { LogoDaMateria } from "../LogoDaMateria";
-import { Progress } from "@/components/ui/progress";
+import { SearchInput } from "../Search";
 import { useMateriasContext } from "@/contexts/MateriasContext/useMaterias";
 import { useNavigate } from "react-router";
-import { Modal } from "../Modal";
 import { usePerfil } from "@/contexts/PerfilContext/usePerfil";
 import { useModal } from "@/hooks/use-modal";
-import { PerfilForm } from "../Modal/PerfilForm";
 
 type AppSidebarProps = {
   onAddMateria?: () => void;
@@ -28,33 +26,37 @@ type AppSidebarProps = {
 export function AppSidebar({ onAddMateria }: AppSidebarProps) {
   const { materias } = useMateriasContext();
   const navigate = useNavigate();
-  const { state } = useSidebar();
+  const { state, setOpenMobile } = useSidebar(); // 👈
   const collapsed = state === "collapsed";
   const { perfil, salvarPerfil } = usePerfil();
   const modalPerfil = useModal();
 
+  function handleNavigate(path: string) {
+    setOpenMobile(false);
+    navigate(path);
+  }
+
+  function handleAddMateria() {
+    setOpenMobile(false);
+    onAddMateria?.();
+  }
+
   return (
     <Sidebar collapsible="icon" className="border-r-0">
-      {/* Estilo para esconder barra de rolagem interna */}
       <style
         dangerouslySetInnerHTML={{
           __html: `
         .sidebar-no-scrollbar::-webkit-scrollbar { display: none; }
-        .sidebar-no-scrollbar { 
-          -ms-overflow-style: none; 
-          scrollbar-width: none; 
-        }
+        .sidebar-no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
       `,
         }}
       />
 
-      {/* HEADER */}
       <SidebarHeader className="bg-navbar-flashcard h-20 flex items-center justify-center border-b border-white/5">
         <SidebarMenuItem className="list-none flex items-center justify-center w-full">
-          {/* Adicionado o onClick para voltar ao "/" */}
           <div
             className="cursor-pointer transition-transform active:scale-95"
-            onClick={() => navigate("/")}
+            onClick={() => handleNavigate("/")} // 👈
           >
             {collapsed ? (
               <img
@@ -75,7 +77,6 @@ export function AppSidebar({ onAddMateria }: AppSidebarProps) {
         </SidebarMenuItem>
       </SidebarHeader>
 
-      {/* CONTENT */}
       <SidebarContent className="bg-navbar-flashcard px-3 py-4 space-y-6 overflow-y-auto sidebar-no-scrollbar">
         {!collapsed && (
           <div className="animate-in slide-in-from-left-2 duration-300">
@@ -88,7 +89,7 @@ export function AppSidebar({ onAddMateria }: AppSidebarProps) {
             <SidebarGroupLabel className="flex items-center justify-between text-white-flashcard/60 font-bold text-xs uppercase tracking-widest p-0 px-1 mb-4">
               Matérias
               <button
-                onClick={onAddMateria}
+                onClick={handleAddMateria} // 👈
                 className="p-1 hover:bg-white/10 rounded-md transition-colors text-white-flashcard"
                 title="Adicionar Matéria"
               >
@@ -99,19 +100,11 @@ export function AppSidebar({ onAddMateria }: AppSidebarProps) {
 
           <div className="space-y-1.5">
             {materias.map((materia) => {
-              // --- LÓGICA DE CÁLCULO DE PROGRESSO ---
-              const decks = materia.decks || [];
-
-              // Pegamos todos os cards de todos os decks desta matéria
-              const todosOsCards = decks.flatMap((deck) => deck.cards || []);
+              const todosOsCards = materia.decks.flatMap((d) => d.cards || []);
               const totalCards = todosOsCards.length;
-
-              // Filtramos quantos desses cards estão masterizados
               const cardsMasterizados = todosOsCards.filter(
-                (card) => card.masterizado,
+                (c) => c.masterizado,
               ).length;
-
-              // Calculamos a porcentagem (se não houver cards, progresso é 0)
               const progressoCalculado =
                 totalCards > 0
                   ? Math.round((cardsMasterizados / totalCards) * 100)
@@ -120,12 +113,8 @@ export function AppSidebar({ onAddMateria }: AppSidebarProps) {
               return (
                 <button
                   key={materia.id}
-                  className={`
-                    w-full flex items-center gap-3 p-2 rounded-xl transition-all group cursor-pointer
-                    hover:bg-white/10 active:scale-95
-                    ${collapsed ? "justify-center" : "px-3"}
-                  `}
-                  onClick={() => navigate(`/materia/${materia.id}`)}
+                  className={`w-full flex items-center gap-3 p-2 rounded-xl transition-all group cursor-pointer hover:bg-white/10 active:scale-95 ${collapsed ? "justify-center" : "px-3"}`}
+                  onClick={() => handleNavigate(`/materia/${materia.id}`)} // 👈
                   title={`${materia.nome} (${progressoCalculado}%)`}
                 >
                   <div className="shrink-0 transition-transform group-hover:scale-110">
@@ -141,7 +130,6 @@ export function AppSidebar({ onAddMateria }: AppSidebarProps) {
                       <p className="text-sm font-bold text-white-flashcard truncate">
                         {materia.nome}
                       </p>
-                      {/* Barra de progresso com o valor calculado dinamicamente */}
                       <Progress
                         value={progressoCalculado}
                         className="h-1 mt-1 w-full"
@@ -155,7 +143,7 @@ export function AppSidebar({ onAddMateria }: AppSidebarProps) {
             {collapsed && (
               <button
                 className="w-full flex items-center justify-center p-2 mt-4 text-white-flashcard/40 hover:text-white-flashcard transition-colors"
-                onClick={onAddMateria}
+                onClick={handleAddMateria} // 👈
               >
                 <div className="h-10 w-10 border-2 border-dashed border-white/20 rounded-xl flex items-center justify-center">
                   <PlusIcon size={20} />
@@ -166,13 +154,9 @@ export function AppSidebar({ onAddMateria }: AppSidebarProps) {
         </SidebarGroup>
       </SidebarContent>
 
-      {/* FOOTER */}
       <SidebarFooter className="bg-navbar-flashcard p-4 border-t border-white/5">
         <div
-          className={`
-            flex items-center gap-3 p-1 rounded-2xl transition-colors
-            ${collapsed ? "justify-center" : "hover:bg-white/5 cursor-pointer"}
-          `}
+          className={`flex items-center gap-3 p-1 rounded-2xl transition-colors ${collapsed ? "justify-center" : "hover:bg-white/5 cursor-pointer"}`}
           onClick={() => !collapsed && modalPerfil.open()}
         >
           <div
@@ -190,7 +174,6 @@ export function AppSidebar({ onAddMateria }: AppSidebarProps) {
                 <UserCircle size={24} className="text-white-flashcard" />
               </div>
             )}
-
             <div className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
               <PenIcon size={12} className="text-white" />
             </div>
