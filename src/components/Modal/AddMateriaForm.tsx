@@ -30,7 +30,6 @@ export function AddMateriaForm({ onSubmit, onClose }: AddMateriaFormProps) {
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
-
     if (!nomeMateria.trim() || nomeMateria.trim().length < 3) {
       showMessage.error("A matéria deve ter pelo menos 3 caracteres.");
       return;
@@ -46,37 +45,22 @@ export function AddMateriaForm({ onSubmit, onClose }: AddMateriaFormProps) {
     });
 
     onClose();
-    showMessage.success("Matéria criada com sucesso!");
+    showMessage.success("Matéria criada!");
   }
 
   return (
-    <div className="flex flex-col w-full max-w-md mx-auto h-full max-h-[82vh]">
-      {/* Estilo para esconder a barra de rolagem */}
-      <style
-        dangerouslySetInnerHTML={{
-          __html: `
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { 
-          -ms-overflow-style: none; 
-          scrollbar-width: none; 
-        }
-      `,
-        }}
-      />
-
-      {/* Header Fixo */}
-      <div className="mb-4 flex-shrink-0">
+    <div className="flex flex-col w-full h-full">
+      {/* Header */}
+      <div className="mb-4 shrink-0">
         <h2 className="text-xl font-bold text-gray-800 tracking-tight">
           Nova Matéria
         </h2>
-        <p className="text-sm text-gray-500">
-          Personalize sua matéria com ícones e cores
-        </p>
+        <p className="text-sm text-gray-500">Personalize com ícone e cor</p>
       </div>
 
-      {/* Preview Dinâmico - Fixo */}
+      {/* Preview */}
       <div
-        className="w-full h-20 rounded-2xl mb-6 flex items-center justify-center gap-3 transition-all duration-300 shadow-inner flex-shrink-0"
+        className="w-full h-20 rounded-2xl mb-6 flex items-center justify-center gap-3 shadow-inner shrink-0"
         style={{ backgroundColor: corMateria }}
       >
         <div className="bg-white/20 p-2 rounded-lg backdrop-blur-sm">
@@ -91,47 +75,31 @@ export function AddMateriaForm({ onSubmit, onClose }: AddMateriaFormProps) {
         </span>
       </div>
 
-      {/* Formulário com Scroll Invisível */}
-      <form
-        className="space-y-5 flex-1 overflow-y-auto no-scrollbar px-1 pb-4"
-        onSubmit={handleSubmit}
-      >
-        {/* Nome */}
+      {/* Inputs - Sem travas de scroll interno que conflitam com o modal */}
+      <form className="space-y-6" onSubmit={handleSubmit}>
         <div className="flex flex-col gap-1.5">
-          <label
-            htmlFor="addMateria"
-            className="text-sm font-semibold text-gray-700 ml-1"
-          >
+          <label className="text-sm font-semibold text-gray-700 ml-1">
             Nome da matéria
           </label>
           <input
-            id="addMateria"
             type="text"
             required
-            minLength={3}
-            maxLength={50}
             placeholder="Ex: Programação React"
             value={nomeMateria}
             onChange={(e) => setNomeMateria(e.target.value)}
-            className="w-full rounded-xl border border-gray-300 px-4 py-3 text-base md:text-sm outline-none transition-all focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 bg-white"
+            // text-base impede o zoom automático do iOS ao focar
+            className="w-full rounded-xl border border-gray-300 px-4 py-3 text-base md:text-sm outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 bg-white"
           />
         </div>
 
-        {/* Seletor de Cor */}
         <div className="flex items-center justify-between bg-gray-50 p-4 rounded-2xl border border-gray-100">
           <div className="flex flex-col">
-            <label
-              htmlFor="addColor"
-              className="text-sm font-semibold text-gray-700"
-            >
-              Cor da Matéria
-            </label>
-            <span className="text-xs text-gray-400 font-mono uppercase">
-              {corMateria}
+            <label className="text-sm font-semibold text-gray-700">Cor</label>
+            <span className="text-xs text-gray-400 font-mono">
+              {corMateria.toUpperCase()}
             </span>
           </div>
           <input
-            id="addColor"
             type="color"
             value={corMateria}
             onChange={(e) => setCorMateria(e.target.value)}
@@ -139,34 +107,32 @@ export function AddMateriaForm({ onSubmit, onClose }: AddMateriaFormProps) {
           />
         </div>
 
-        {/* Picker de Ícones */}
         <div className="flex flex-col gap-1.5">
           <label className="text-sm font-semibold text-gray-700 ml-1">
-            Selecione um Ícone
+            Ícone
           </label>
-          <div className="rounded-2xl border border-gray-200 p-2 bg-white shadow-sm">
+          <div className="rounded-2xl border border-gray-200 p-2 bg-white shadow-sm overflow-hidden">
             <IconePicker value={icone} cor={corMateria} onChange={setIcone} />
           </div>
         </div>
-      </form>
 
-      {/* Footer Fixo */}
-      <div className="mt-4 flex flex-col-reverse sm:flex-row justify-end gap-3 pt-4 border-t border-gray-100 flex-shrink-0 bg-white">
-        <button
-          type="button"
-          onClick={onClose}
-          className="w-full sm:w-auto rounded-xl px-6 py-3 text-sm font-bold text-gray-400 hover:bg-gray-50 transition-colors"
-        >
-          Cancelar
-        </button>
-        <button
-          type="submit"
-          onClick={handleSubmit}
-          className="w-full sm:w-auto rounded-xl bg-blue-600 px-8 py-3 text-sm font-bold text-white hover:bg-blue-700 shadow-lg shadow-blue-500/20 active:scale-95 transition-all flex items-center justify-center gap-2"
-        >
-          <Save size={18} /> Criar Matéria
-        </button>
-      </div>
+        {/* Botões - Fora de um footer fixo para que o teclado não os cubra */}
+        <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-4 border-t border-gray-100">
+          <button
+            type="button"
+            onClick={onClose}
+            className="w-full sm:w-auto rounded-xl px-6 py-3 text-sm font-bold text-gray-400 hover:bg-gray-100"
+          >
+            Cancelar
+          </button>
+          <button
+            type="submit"
+            className="w-full sm:w-auto rounded-xl bg-blue-600 px-8 py-3 text-sm font-bold text-white hover:bg-blue-700 shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2"
+          >
+            <Save size={18} /> Criar Matéria
+          </button>
+        </div>
+      </form>
     </div>
   );
 }
