@@ -1,4 +1,5 @@
-import { useState, TouchEvent, ReactNode } from "react";
+import { useState, useEffect, useRef } from "react";
+import type { TouchEvent, ReactNode } from "react";
 
 type ModalProps = {
   isOpen: boolean;
@@ -7,72 +8,104 @@ type ModalProps = {
 };
 
 export function Modal({ children, isOpen, onClose }: ModalProps) {
-  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchStartY, setTouchStartY] = useState<number | null>(null);
+  const [dragY, setDragY] = useState(0);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  // 🔒 Bloqueia scroll do body quando modal abre
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
-  // Lógica de Swipe to Close (Deslizar para baixo)
-  const handleTouchStart = (e: TouchEvent) => {
-    setTouchStart(e.targetTouches[0].clientY);
-  };
+  // ==========================
+  // TOUCH HANDLERS (Mobile)
+  // ==========================
 
-  const handleTouchMove = (e: TouchEvent) => {
-    if (touchStart === null) return;
+  function handleTouchStart(e: TouchEvent) {
+    setTouchStartY(e.touches[0].clientY);
+  }
 
-    const currentTouch = e.targetTouches[0].clientY;
-    const diff = currentTouch - touchStart;
-    const scrollContainer = e.currentTarget.querySelector(".modal-content");
+  function handleTouchMove(e: TouchEvent) {
+    if (touchStartY === null) return;
 
-    // Só fecha se o usuário estiver no topo do scroll e deslizar para baixo
-    if (diff > 150 && scrollContainer && scrollContainer.scrollTop <= 0) {
-      onClose();
-      setTouchStart(null);
+    const currentY = e.touches[0].clientY;
+    const diff = currentY - touchStartY;
+
+    const scrollTop = contentRef.current?.scrollTop ?? 0;
+
+    // Só permite arrastar se estiver no topo do scroll
+    if (scrollTop <= 0 && diff > 0) {
+      setDragY(diff);
     }
-  };
+  }
+
+  function handleTouchEnd() {
+    if (dragY > 120) {
+      onClose();
+    } else {
+      setDragY(0);
+    }
+
+    setTouchStartY(null);
+  }
+
+  // ==========================
+  // RENDER
+  // ==========================
 
   return (
     <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center">
-      {/* Overlay com desfoque */}
+      {/* Overlay */}
       <div
-        className="fixed inset-0 bg-black/70 backdrop-blur-sm transition-opacity"
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
         onClick={onClose}
       />
 
-      {/* Container do Modal */}
+      {/* Modal */}
       <div
+        ref={modalRef}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        style={{
+          transform: `translateY(${dragY}px)`,
+          transition: dragY === 0 ? "transform 0.2s ease" : "none",
+        }}
         className="
-          relative w-full bg-white shadow-2xl
+          relative w-full bg-white
           rounded-t-[32px] sm:rounded-2xl
           flex flex-col
           max-h-[94vh] sm:max-h-[85vh]
-          sm:max-w-md z-[101]
-          animate-in slide-in-from-bottom-10 duration-300
-          outline-none
+          sm:max-w-md
+          shadow-2xl
+          z-[101]
         "
       >
-        {/* Barra de arraste visual */}
+        {/* Barra de arraste (mobile) */}
         <div className="flex justify-center py-4 sm:hidden shrink-0">
           <div className="w-16 h-1.5 bg-gray-300 rounded-full" />
         </div>
 
-        {/* Área de Conteúdo - Onde o scroll acontece livremente */}
+        {/* Conteúdo scrollável */}
         <div
-          className="modal-content flex-1 overflow-y-auto px-6 pb-12 pt-2 sm:pt-6 no-scrollbar"
+          ref={contentRef}
+          className="flex-1 overflow-y-auto px-6 pb-12 pt-2 sm:pt-6"
           style={{
             WebkitOverflowScrolling: "touch",
             overscrollBehavior: "contain",
           }}
         >
-          <style
-            dangerouslySetInnerHTML={{
-              __html: `
-            .no-scrollbar::-webkit-scrollbar { display: none; }
-            .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-          `,
-            }}
-          />
           {children}
         </div>
       </div>
