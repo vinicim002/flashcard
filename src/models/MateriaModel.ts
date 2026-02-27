@@ -5,6 +5,6 @@ export type MateriaModel = {
   nome: string;
   decks: DeckModel[];
   totalDecksConcluidos: number;
-  imagemUrl?: string;
-  cor: string
-};
+  cor: string;
+  icone: string;
+}

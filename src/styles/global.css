@@ -76,6 +76,19 @@ h6 {
   transform: rotateY(180deg);
 }
 
+/* Custom Scrollbar Global */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: #e5e7eb;
+  border-radius: 20px;
+  border: 2px solid transparent;
+}
+
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);

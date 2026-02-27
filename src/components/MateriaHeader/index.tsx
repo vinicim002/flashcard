@@ -1,4 +1,4 @@
-import { PenIcon, TreesIcon } from "lucide-react";
+import { PenIcon } from "lucide-react";
 import { LogoDaMateria } from "../LogoDaMateria";
 import type { MateriaModel } from "@/models/MateriaModel";
 import { Progress } from "@/components/ui/progress";
@@ -41,7 +41,8 @@ export function MateriaHeader({ materiaAtual }: MateriaHeaderProps) {
         {/* Lado Esquerdo: Logo + Info */}
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 text-center sm:text-left">
           <LogoDaMateria
-            icon={<TreesIcon size={48} className="md:w-16 md:h-16" />}
+            size={60}
+            icon={materiaAtual.icone}
             className="p-3 shrink-0 rounded-2xl shadow-sm"
             style={{ backgroundColor: materiaAtual.cor }}
           />

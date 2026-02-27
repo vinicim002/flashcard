@@ -1,3 +1,4 @@
+import { MessagesContainer } from "./components/MessagesContainer";
 import { MateriasContextProvider } from "./contexts/MateriasContext/MateriasContextProvider";
 import { PerfilContextProvider } from "./contexts/PerfilContext/PerfilContextProvider";
 import { MainRouter } from "./routers/MainRouter";
@@ -9,7 +10,9 @@ export function App() {
     <>
       <PerfilContextProvider>
         <MateriasContextProvider>
-          <MainRouter />
+          <MessagesContainer>
+            <MainRouter />
+          </MessagesContainer>
         </MateriasContextProvider>
       </PerfilContextProvider>
     </>

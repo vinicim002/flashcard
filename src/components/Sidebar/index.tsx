@@ -6,11 +6,10 @@ import {
   SidebarMenuItem,
   SidebarGroup,
   SidebarGroupLabel,
-  SidebarGroupAction,
-  useSidebar, // 👈
+  useSidebar,
 } from "@/components/ui/sidebar";
 
-import { PenIcon, PlusIcon, TreesIcon, UserCircle } from "lucide-react";
+import { PenIcon, PlusIcon, UserCircle } from "lucide-react";
 
 import { SearchInput } from "../Search";
 import { LogoDaMateria } from "../LogoDaMateria";
@@ -35,85 +34,132 @@ export function AppSidebar({ onAddMateria }: AppSidebarProps) {
   const modalPerfil = useModal();
 
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar collapsible="icon" className="border-r-0">
+      {/* Estilo para esconder barra de rolagem interna */}
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+        .sidebar-no-scrollbar::-webkit-scrollbar { display: none; }
+        .sidebar-no-scrollbar { 
+          -ms-overflow-style: none; 
+          scrollbar-width: none; 
+        }
+      `,
+        }}
+      />
+
       {/* HEADER */}
-      <SidebarHeader className="bg-navbar-flashcard">
-        <SidebarMenuItem className="flex items-center justify-center p-1 list-none">
-          {collapsed ? (
-            <img
-              src="img/logoCircle.png"
-              alt="Logo"
-              className="h-8 w-8 min-w-[2rem] min-h-[2rem] rounded-full object-cover shrink-0"
-            />
-          ) : (
-            /* Logo completa quando aberta */
-            <div className="flex h-14 items-center justify-center p-2">
+      <SidebarHeader className="bg-navbar-flashcard h-20 flex items-center justify-center border-b border-white/5">
+        <SidebarMenuItem className="list-none flex items-center justify-center w-full">
+          {/* Adicionado o onClick para voltar ao "/" */}
+          <div
+            className="cursor-pointer transition-transform active:scale-95"
+            onClick={() => navigate("/")}
+          >
+            {collapsed ? (
               <img
-                src="/img/logoCompletaAmarela.svg"
+                src="/img/logoCircle.png"
                 alt="Logo"
-                className="h-full w-auto object-contain"
+                className="h-9 w-9 min-w-[2.25rem] rounded-full object-cover shadow-lg"
               />
-            </div>
-          )}
+            ) : (
+              <div className="flex h-12 items-center justify-center p-2 animate-in fade-in duration-500">
+                <img
+                  src="/img/logoCompletaAmarela.svg"
+                  alt="Logo"
+                  className="h-full w-auto object-contain"
+                />
+              </div>
+            )}
+          </div>
         </SidebarMenuItem>
       </SidebarHeader>
-      {/* CONTENT */}
-      <SidebarContent className="bg-navbar-flashcard px-3 py-3 space-y-6">
-        {/* SEARCH — só no modo expandido */}
-        {!collapsed && <SearchInput />}
 
-        {/* GROUP: MATÉRIAS */}
+      {/* CONTENT */}
+      <SidebarContent className="bg-navbar-flashcard px-3 py-4 space-y-6 overflow-y-auto sidebar-no-scrollbar">
+        {!collapsed && (
+          <div className="animate-in slide-in-from-left-2 duration-300">
+            <SearchInput />
+          </div>
+        )}
+
         <SidebarGroup className="p-0">
           {!collapsed && (
-            <SidebarGroupLabel className="relative text-white-flashcard text-base p-0">
+            <SidebarGroupLabel className="flex items-center justify-between text-white-flashcard/60 font-bold text-xs uppercase tracking-widest p-0 px-1 mb-4">
               Matérias
-              <SidebarGroupAction
-                title="Adicionar Matéria"
-                className="absolute right-0 top-1/2 -translate-y-1/2"
+              <button
                 onClick={onAddMateria}
+                className="p-1 hover:bg-white/10 rounded-md transition-colors text-white-flashcard"
+                title="Adicionar Matéria"
               >
-                <PlusIcon size={16} />
-              </SidebarGroupAction>
+                <PlusIcon size={18} />
+              </button>
             </SidebarGroupLabel>
           )}
 
-          <div className="mt-4 space-y-2">
-            {materias.map((materia) => (
-              <button
-                key={materia.id}
-                className={`w-full flex items-center gap-3 p-2 rounded-lg text-left hover:bg-white-flashcard/5 transition cursor-pointer ${collapsed ? "justify-center" : ""}`}
-                onClick={() => navigate(`/materia/${materia.id}`)}
-                title={materia.nome}
-              >
-                <LogoDaMateria
-                  icon={<TreesIcon size={16} />}
-                  className="p-2 shrink-0"
-                  style={{ backgroundColor: materia.cor }}
-                />
+          <div className="space-y-1.5">
+            {materias.map((materia) => {
+              // --- LÓGICA DE CÁLCULO DE PROGRESSO ---
+              const decks = materia.decks || [];
 
-                {!collapsed && (
-                  <div className="flex-1 overflow-hidden">
-                    <p className="text-base font-medium text-white-flashcard truncate">
-                      {materia.nome}
-                    </p>
-                    <Progress value={70} className="h-1 mt-1 w-full" />
+              // Pegamos todos os cards de todos os decks desta matéria
+              const todosOsCards = decks.flatMap((deck) => deck.cards || []);
+              const totalCards = todosOsCards.length;
+
+              // Filtramos quantos desses cards estão masterizados
+              const cardsMasterizados = todosOsCards.filter(
+                (card) => card.masterizado,
+              ).length;
+
+              // Calculamos a porcentagem (se não houver cards, progresso é 0)
+              const progressoCalculado =
+                totalCards > 0
+                  ? Math.round((cardsMasterizados / totalCards) * 100)
+                  : 0;
+
+              return (
+                <button
+                  key={materia.id}
+                  className={`
+                    w-full flex items-center gap-3 p-2 rounded-xl transition-all group cursor-pointer
+                    hover:bg-white/10 active:scale-95
+                    ${collapsed ? "justify-center" : "px-3"}
+                  `}
+                  onClick={() => navigate(`/materia/${materia.id}`)}
+                  title={`${materia.nome} (${progressoCalculado}%)`}
+                >
+                  <div className="shrink-0 transition-transform group-hover:scale-110">
+                    <LogoDaMateria
+                      icon={materia.icone}
+                      className="h-10 w-10 shadow-md"
+                      style={{ backgroundColor: materia.cor }}
+                    />
                   </div>
-                )}
-              </button>
-            ))}
 
-            {/* Botão + no modo colapsado */}
+                  {!collapsed && (
+                    <div className="flex-1 text-left overflow-hidden animate-in fade-in slide-in-from-left-1">
+                      <p className="text-sm font-bold text-white-flashcard truncate">
+                        {materia.nome}
+                      </p>
+                      {/* Barra de progresso com o valor calculado dinamicamente */}
+                      <Progress
+                        value={progressoCalculado}
+                        className="h-1 mt-1 w-full"
+                      />
+                    </div>
+                  )}
+                </button>
+              );
+            })}
+
             {collapsed && (
               <button
-                className="w-full flex items-center justify-center p-2 rounded-lg cursor-pointer text-white-flashcard"
+                className="w-full flex items-center justify-center p-2 mt-4 text-white-flashcard/40 hover:text-white-flashcard transition-colors"
                 onClick={onAddMateria}
-                title="Adicionar Matéria"
               >
-                <LogoDaMateria
-                  icon={<PlusIcon size={16} />}
-                  className="p-2 shrink-0"
-                  style={{ backgroundColor: "rgba(255,255,255,0.15)" }}
-                />
+                <div className="h-10 w-10 border-2 border-dashed border-white/20 rounded-xl flex items-center justify-center">
+                  <PlusIcon size={20} />
+                </div>
               </button>
             )}
           </div>
@@ -121,47 +167,47 @@ export function AppSidebar({ onAddMateria }: AppSidebarProps) {
       </SidebarContent>
 
       {/* FOOTER */}
-      <SidebarFooter className="bg-navbar-flashcard px-4 py-3 border-t-2 border-white-flashcard/20">
+      <SidebarFooter className="bg-navbar-flashcard p-4 border-t border-white/5">
         <div
-          className={`flex items-center gap-3 ${collapsed ? "justify-center" : ""}`}
+          className={`
+            flex items-center gap-3 p-1 rounded-2xl transition-colors
+            ${collapsed ? "justify-center" : "hover:bg-white/5 cursor-pointer"}
+          `}
+          onClick={() => !collapsed && modalPerfil.open()}
         >
-          {/* Avatar com hover para editar */}
           <div
             className="relative group cursor-pointer shrink-0"
-            onClick={() => modalPerfil.open()}
-            title="Editar perfil"
+            onClick={() => collapsed && modalPerfil.open()}
           >
             {perfil?.avatarUrl ? (
               <img
                 src={perfil.avatarUrl}
                 alt="Avatar"
-                className="h-10 w-10 min-w-10 min-h-10 rounded-full object-cover"
+                className="h-10 w-10 min-w-[2.5rem] min-h-[2.5rem] rounded-full object-cover border-2 border-white/10 group-hover:border-yellow-400 transition-all"
               />
             ) : (
-              <div className="h-10 w-10 min-w-10 min-h-10 rounded-full bg-gray-400 flex items-center justify-center">
-                <UserCircle size={24} className="text-white" />
+              <div className="h-10 w-10 min-w-[2.5rem] min-h-[2.5rem] rounded-full bg-white/10 flex items-center justify-center">
+                <UserCircle size={24} className="text-white-flashcard" />
               </div>
             )}
 
-            {/* Caneta aparece no hover */}
-            <div className="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
-              <PenIcon size={14} className="text-white" />
+            <div className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+              <PenIcon size={12} className="text-white" />
             </div>
           </div>
 
           {!collapsed && (
-            <div className="leading-tight overflow-hidden">
-              <p className="text-sm font-semibold text-white-flashcard truncate">
+            <div className="flex-1 min-w-0 animate-in fade-in duration-300">
+              <p className="text-sm font-bold text-white-flashcard truncate">
                 {perfil?.nome ?? "Usuário"}
               </p>
-              <p className="text-xs text-white-flashcard/70 truncate">
-                {perfil?.profissao ?? ""}
+              <p className="text-[10px] font-medium text-white-flashcard/50 uppercase truncate">
+                {perfil?.profissao ?? "Estudante"}
               </p>
             </div>
           )}
         </div>
 
-        {/* Modal de edição de perfil */}
         <Modal isOpen={modalPerfil.isOpen} onClose={modalPerfil.close}>
           <PerfilForm
             perfilAtual={perfil}

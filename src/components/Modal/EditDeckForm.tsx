@@ -7,7 +7,10 @@ import {
   RotateCcw,
   ChevronDown,
   ChevronUp,
+  Save,
+  Check,
 } from "lucide-react";
+import { showMessage } from "@/adapters/showMessage";
 
 type EditDeckFormProps = {
   deck: DeckModel;
@@ -38,7 +41,10 @@ export function EditDeckForm({
 
   function handleSalvarDeck(e: React.FormEvent) {
     e.preventDefault();
+    if (nomeDeck.trim().length < 3)
+      return showMessage.error("O nome deve ter pelo menos 3 caracteres.");
     onEditDeck({ nome: nomeDeck });
+    showMessage.success("Nome do deck atualizado!");
   }
 
   function handleDeleteDeck() {
@@ -48,6 +54,7 @@ export function EditDeckForm({
     }
     onDeleteDeck();
     onClose();
+    showMessage.success("Deck removido.");
   }
 
   function handleExpandirCard(cardId: string, card: CardModel) {
@@ -63,29 +70,20 @@ export function EditDeckForm({
     setDica(card.dica);
   }
 
-  function handleEditarCard(cardId: string) {
-    setCardEmEdicao(cardId);
-  }
-
-  function handleSalvarCard(cardId: string) {
-    onEditCard(cardId, { frente, verso, dica });
-    setCardEmEdicao(null);
-  }
-
   return (
-    <>
+    <div className="flex flex-col w-full">
       {/* Header */}
       <div className="mb-4 flex justify-between items-start">
         <div>
-          <h2 className="text-xl font-bold text-gray-800">Editar Deck</h2>
+          <h2 className="text-xl font-bold text-gray-800">Gerenciar Deck</h2>
           <p className="text-sm text-gray-500">
-            Edite o deck e gerencie seus cards
+            Configure o nome e organize seus cards
           </p>
         </div>
         <button
           type="button"
           onClick={handleDeleteDeck}
-          className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-medium transition ${
+          className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm font-medium transition shrink-0 ml-4 ${
             confirmDeleteDeck
               ? "bg-red-600 text-white hover:bg-red-700"
               : "text-red-500 hover:bg-red-50"
@@ -96,169 +94,186 @@ export function EditDeckForm({
         </button>
       </div>
 
-      {/* Preview */}
+      {/* Preview nome */}
       <div className="w-full h-16 rounded-xl mb-4 flex items-center justify-center bg-gray-100 border-2 border-dashed border-gray-300">
         <span className="text-gray-700 font-bold text-lg">
-          {nomeDeck || "Preview"}
+          {nomeDeck.trim() || "Preview"}
         </span>
       </div>
 
-      {/* Form nome do deck */}
-      <form className="space-y-2 mb-6" onSubmit={handleSalvarDeck}>
+      {/* Form nome */}
+      <form className="mb-6" onSubmit={handleSalvarDeck}>
         <div className="flex gap-2">
           <input
             type="text"
             value={nomeDeck}
-            onChange={(e) => setNomeDeck(e.target.value)}
-            className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+            required
             placeholder="Nome do deck"
+            className="flex-1 rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+            onChange={(e) => setNomeDeck(e.target.value)}
           />
           <button
             type="submit"
-            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition flex items-center gap-1 shrink-0"
           >
-            Salvar
+            <Save size={14} /> Salvar
           </button>
         </div>
       </form>
 
-      {/* Lista de cards */}
-      <div className="flex flex-col gap-2 max-h-72 overflow-y-auto pr-1">
+      {/* Lista de Cards */}
+      <div className="flex flex-col gap-2">
         <p className="text-xs font-semibold text-gray-500 uppercase mb-1">
           Cards ({deck.cards.length})
         </p>
 
-        {deck.cards.length === 0 && (
-          <p className="text-sm text-gray-400 text-center py-4">
-            Nenhum card neste deck
-          </p>
-        )}
-
-        {deck.cards.map((card) => (
-          <div
-            key={card.id}
-            className="border border-gray-200 rounded-xl overflow-hidden"
-          >
-            {/* Mini card — clicável para expandir */}
-            <div
-              className="flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-gray-50 transition"
-              onClick={() => handleExpandirCard(card.id, card)}
-            >
-              <div className="flex-1 overflow-hidden">
-                <p className="text-sm font-semibold text-gray-800 truncate">
-                  {card.frente}
-                </p>
-                <p className="text-xs text-gray-400 truncate">{card.verso}</p>
-              </div>
-              <div className="flex items-center gap-2 ml-2 shrink-0">
-                {/* Badge masterizado */}
-                {card.masterizado && (
-                  <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
-                    ✓ Master
-                  </span>
-                )}
-                {cardExpandido === card.id ? (
-                  <ChevronUp size={16} />
-                ) : (
-                  <ChevronDown size={16} />
-                )}
-              </div>
+        <div className="flex flex-col gap-2 max-h-72 overflow-y-auto pr-1">
+          {deck.cards.length === 0 ? (
+            <div className="text-center py-8 bg-gray-50 rounded-xl border-2 border-dashed border-gray-200">
+              <p className="text-sm text-gray-400">Este deck está vazio.</p>
             </div>
-
-            {/* Conteúdo expandido */}
-            {cardExpandido === card.id && (
-              <div className="px-4 pb-4 border-t border-gray-100 bg-gray-50">
-                {cardEmEdicao === card.id ? (
-                  /* Modo edição */
-                  <div className="flex flex-col gap-2 pt-3">
-                    <input
-                      type="text"
-                      value={frente}
-                      onChange={(e) => setFrente(e.target.value)}
-                      placeholder="Frente (pergunta)"
-                      className="rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-                    />
-                    <input
-                      type="text"
-                      value={verso}
-                      onChange={(e) => setVerso(e.target.value)}
-                      placeholder="Verso (resposta)"
-                      className="rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-                    />
-                    <input
-                      type="text"
-                      value={dica}
-                      onChange={(e) => setDica(e.target.value)}
-                      placeholder="Dica (opcional)"
-                      className="rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
-                    />
-                    <div className="flex gap-2 justify-end">
-                      <button
-                        onClick={() => setCardEmEdicao(null)}
-                        className="text-sm text-gray-500 hover:bg-gray-100 px-3 py-1.5 rounded-lg"
-                      >
-                        Cancelar
-                      </button>
-                      <button
-                        onClick={() => handleSalvarCard(card.id)}
-                        className="text-sm bg-blue-600 text-white px-3 py-1.5 rounded-lg hover:bg-blue-700"
-                      >
-                        Salvar card
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  /* Modo visualização */
-                  <div className="pt-3 flex flex-col gap-2">
-                    <div className="flex gap-2 p-3 bg-white rounded-lg border border-gray-200">
-                      <div className="flex-1">
-                        <p className="text-xs text-gray-400 mb-1">Frente</p>
-                        <p className="text-sm font-medium">{card.frente}</p>
-                      </div>
-                      <div className="w-px bg-gray-200" />
-                      <div className="flex-1">
-                        <p className="text-xs text-gray-400 mb-1">Verso</p>
-                        <p className="text-sm">{card.verso}</p>
-                      </div>
-                    </div>
-                    {card.dica && (
-                      <p className="text-xs text-gray-400 italic">
-                        💡 {card.dica}
-                      </p>
-                    )}
-                    <p className="text-xs text-gray-400">
-                      Acertos consecutivos:{" "}
-                      <strong>{card.acertosConsecutivos}</strong>
+          ) : (
+            deck.cards.map((card) => (
+              <div
+                key={card.id}
+                className="border border-gray-200 rounded-xl overflow-hidden"
+              >
+                {/* Cabeçalho do Card */}
+                <div
+                  className="flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-gray-50 transition"
+                  onClick={() => handleExpandirCard(card.id, card)}
+                >
+                  <div className="flex-1 min-w-0 pr-2">
+                    <p className="text-sm font-semibold text-gray-800 truncate">
+                      {card.frente}
                     </p>
+                    <p className="text-xs text-gray-400 truncate">
+                      {card.verso}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2 shrink-0">
+                    {card.masterizado && (
+                      <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded-full">
+                        ✓ Master
+                      </span>
+                    )}
+                    {cardExpandido === card.id ? (
+                      <ChevronUp size={16} className="text-gray-400" />
+                    ) : (
+                      <ChevronDown size={16} className="text-gray-400" />
+                    )}
+                  </div>
+                </div>
 
-                    {/* Ações do card */}
-                    <div className="flex gap-2 justify-end">
-                      <button
-                        onClick={() => onResetCard(card.id)}
-                        title="Resetar progresso"
-                        className="flex items-center gap-1 text-xs text-gray-500 hover:bg-gray-200 px-2 py-1.5 rounded-lg transition"
-                      >
-                        <RotateCcw size={12} /> Resetar
-                      </button>
-                      <button
-                        onClick={() => handleEditarCard(card.id)}
-                        className="flex items-center gap-1 text-xs text-blue-600 hover:bg-blue-50 px-2 py-1.5 rounded-lg transition"
-                      >
-                        <PenIcon size={12} /> Editar
-                      </button>
-                      <button
-                        onClick={() => onDeleteCard(card.id)}
-                        className="flex items-center gap-1 text-xs text-red-500 hover:bg-red-50 px-2 py-1.5 rounded-lg transition"
-                      >
-                        <Trash2 size={12} /> Excluir
-                      </button>
-                    </div>
+                {/* Conteúdo Expandido */}
+                {cardExpandido === card.id && (
+                  <div className="px-4 pb-4 pt-3 border-t border-gray-100 bg-gray-50">
+                    {cardEmEdicao === card.id ? (
+                      <div className="flex flex-col gap-2">
+                        <input
+                          type="text"
+                          value={frente}
+                          onChange={(e) => setFrente(e.target.value)}
+                          placeholder="Frente (pergunta)"
+                          className="rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                        />
+                        <input
+                          type="text"
+                          value={verso}
+                          onChange={(e) => setVerso(e.target.value)}
+                          placeholder="Verso (resposta)"
+                          className="rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                        />
+                        <input
+                          type="text"
+                          value={dica}
+                          onChange={(e) => setDica(e.target.value)}
+                          placeholder="Dica (opcional)"
+                          className="rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20"
+                        />
+                        <div className="flex gap-2 justify-end">
+                          <button
+                            onClick={() => setCardEmEdicao(null)}
+                            className="text-sm text-gray-500 hover:bg-gray-100 px-3 py-1.5 rounded-lg"
+                          >
+                            Cancelar
+                          </button>
+                          <button
+                            onClick={() => {
+                              onEditCard(card.id, { frente, verso, dica });
+                              setCardEmEdicao(null);
+                              showMessage.success("Card editado!");
+                            }}
+                            className="text-sm bg-blue-600 text-white px-3 py-1.5 rounded-lg hover:bg-blue-700 flex items-center gap-1"
+                          >
+                            <Check size={14} /> Confirmar
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col gap-3">
+                        {/* Frente / Verso */}
+                        <div className="grid grid-cols-2 gap-2">
+                          <div className="bg-white p-3 rounded-lg border border-gray-200">
+                            <p className="text-xs text-gray-400 mb-1">Frente</p>
+                            <p className="text-sm font-medium text-gray-700">
+                              {card.frente}
+                            </p>
+                          </div>
+                          <div className="bg-white p-3 rounded-lg border border-gray-200">
+                            <p className="text-xs text-gray-400 mb-1">Verso</p>
+                            <p className="text-sm text-gray-700">
+                              {card.verso}
+                            </p>
+                          </div>
+                        </div>
+
+                        {card.dica && (
+                          <p className="text-xs text-gray-400 italic">
+                            💡 {card.dica}
+                          </p>
+                        )}
+
+                        <p className="text-xs text-gray-400">
+                          Acertos consecutivos:{" "}
+                          <strong>{card.acertosConsecutivos}</strong>
+                        </p>
+
+                        {/* Ações */}
+                        <div className="grid grid-cols-3 gap-2">
+                          <button
+                            onClick={() => {
+                              onResetCard(card.id);
+                              showMessage.success("Progresso resetado.");
+                            }}
+                            className="flex flex-col items-center gap-1 p-2.5 rounded-lg text-xs font-medium text-orange-600 bg-orange-50 hover:bg-orange-100 transition"
+                          >
+                            <RotateCcw size={14} /> Resetar
+                          </button>
+                          <button
+                            onClick={() => setCardEmEdicao(card.id)}
+                            className="flex flex-col items-center gap-1 p-2.5 rounded-lg text-xs font-medium text-blue-600 bg-blue-50 hover:bg-blue-100 transition"
+                          >
+                            <PenIcon size={14} /> Editar
+                          </button>
+                          <button
+                            onClick={() => {
+                              onDeleteCard(card.id);
+                              showMessage.success("Card removido.");
+                            }}
+                            className="flex flex-col items-center gap-1 p-2.5 rounded-lg text-xs font-medium text-red-600 bg-red-50 hover:bg-red-100 transition"
+                          >
+                            <Trash2 size={14} /> Excluir
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
-            )}
-          </div>
-        ))}
+            ))
+          )}
+        </div>
       </div>
 
       {/* Footer */}
@@ -270,6 +285,6 @@ export function EditDeckForm({
           Fechar
         </button>
       </div>
-    </>
+    </div>
   );
 }
