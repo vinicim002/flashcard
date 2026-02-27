@@ -13,14 +13,12 @@ export function Modal({ children, isOpen, onClose }: ModalProps) {
   const contentRef = useRef<HTMLDivElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
 
-  // 🔒 Bloqueia scroll do body quando modal abre
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
     }
-
     return () => {
       document.body.style.overflow = "";
     };
@@ -28,23 +26,15 @@ export function Modal({ children, isOpen, onClose }: ModalProps) {
 
   if (!isOpen) return null;
 
-  // ==========================
-  // TOUCH HANDLERS (Mobile)
-  // ==========================
-
   function handleTouchStart(e: TouchEvent) {
     setTouchStartY(e.touches[0].clientY);
   }
 
   function handleTouchMove(e: TouchEvent) {
     if (touchStartY === null) return;
-
     const currentY = e.touches[0].clientY;
     const diff = currentY - touchStartY;
-
     const scrollTop = contentRef.current?.scrollTop ?? 0;
-
-    // Só permite arrastar se estiver no topo do scroll
     if (scrollTop <= 0 && diff > 0) {
       setDragY(diff);
     }
@@ -56,26 +46,29 @@ export function Modal({ children, isOpen, onClose }: ModalProps) {
     } else {
       setDragY(0);
     }
-
     setTouchStartY(null);
   }
 
-  // ==========================
-  // RENDER
-  // ==========================
-
   return (
     <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center">
-      {/* Overlay */}
+      {/* Overlay — só fecha se clicar diretamente nele */}
       <div
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-        onClick={onClose}
+        onMouseDown={(e) => {
+          if (e.target === e.currentTarget) onClose();
+        }}
+        onTouchEnd={(e) => {
+          if (e.target === e.currentTarget) onClose();
+        }}
       />
 
       {/* Modal */}
       <div
         ref={modalRef}
-        onTouchStart={handleTouchStart}
+        onTouchStart={(e) => {
+          e.stopPropagation(); // 👈 impede overlay de capturar toques do modal
+          handleTouchStart(e);
+        }}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
         style={{
