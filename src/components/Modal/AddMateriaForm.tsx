@@ -30,9 +30,8 @@ export function AddMateriaForm({ onSubmit, onClose }: AddMateriaFormProps) {
 
   function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
-
     if (!nomeMateria.trim() || nomeMateria.trim().length < 3) {
-      showMessage.error("A matéria deve ter pelo menos 3 caracteres.");
+      showMessage.error("O nome deve ter pelo menos 3 caracteres.");
       return;
     }
 
@@ -46,24 +45,24 @@ export function AddMateriaForm({ onSubmit, onClose }: AddMateriaFormProps) {
     });
 
     onClose();
-    showMessage.success("Matéria criada!");
+    showMessage.success("Matéria criada com sucesso!");
   }
 
   return (
-    <div className="flex flex-col w-full">
+    <div className="flex flex-col w-full h-full">
       {/* Header */}
       <div className="mb-6 shrink-0">
         <h2 className="text-2xl font-black text-gray-800 tracking-tight">
           Nova Matéria
         </h2>
         <p className="text-sm text-gray-500 font-medium">
-          Configure o visual da disciplina
+          Personalize seu espaço de estudo
         </p>
       </div>
 
-      {/* Preview */}
+      {/* Preview Card */}
       <div
-        className="w-full h-24 rounded-3xl mb-8 flex items-center justify-center gap-4 shadow-inner shrink-0"
+        className="w-full h-24 rounded-3xl mb-8 flex items-center justify-center gap-4 shadow-inner shrink-0 transition-colors duration-300"
         style={{ backgroundColor: corMateria }}
       >
         <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-md">
@@ -73,36 +72,35 @@ export function AddMateriaForm({ onSubmit, onClose }: AddMateriaFormProps) {
             className="text-white drop-shadow-md"
           />
         </div>
-        <span className="text-white font-bold text-xl drop-shadow-md truncate max-w-[60%]">
+        <span className="text-white font-bold text-xl drop-shadow-md truncate max-w-[65%]">
           {nomeMateria.trim() || "Nova Matéria"}
         </span>
       </div>
 
-      <form className="space-y-8" onSubmit={handleSubmit}>
-        {/* Nome com fix de zoom do iOS */}
+      {/* Inputs */}
+      <form className="space-y-6" onSubmit={handleSubmit}>
         <div className="flex flex-col gap-2">
           <label className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">
-            Nome da matéria
+            Nome da Matéria
           </label>
           <input
             type="text"
             required
-            placeholder="Ex: Anatomia Humana"
+            placeholder="Ex: Farmacologia"
             value={nomeMateria}
             onChange={(e) => setNomeMateria(e.target.value)}
-            // text-[16px] impede o zoom forçado do navegador mobile
-            className="w-full rounded-2xl border-2 border-gray-100 bg-gray-50 px-4 py-4 text-[16px] md:text-sm outline-none transition-all focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-500/10"
+            // text-[16px] impede o zoom do iOS que quebra o scroll do modal
+            className="w-full rounded-2xl border-2 border-gray-100 bg-gray-50 px-4 py-4 text-[16px] md:text-sm outline-none transition-all focus:border-blue-500 focus:bg-white"
           />
         </div>
 
-        {/* Seletor de Cor */}
         <div className="flex items-center justify-between bg-gray-50 p-4 rounded-3xl border-2 border-gray-100">
           <div className="flex flex-col">
             <label className="text-xs font-bold text-gray-400 uppercase tracking-widest">
               Cor
             </label>
-            <span className="text-sm font-bold text-gray-700 font-mono uppercase">
-              {corMateria}
+            <span className="text-sm font-bold text-gray-700 font-mono">
+              {corMateria.toUpperCase()}
             </span>
           </div>
           <input
@@ -113,18 +111,16 @@ export function AddMateriaForm({ onSubmit, onClose }: AddMateriaFormProps) {
           />
         </div>
 
-        {/* Picker de Ícones */}
         <div className="flex flex-col gap-2">
           <label className="text-xs font-bold text-gray-400 uppercase tracking-widest ml-1">
-            Escolha um ícone
+            Escolha um Ícone
           </label>
-          <div className="rounded-3xl border-2 border-gray-100 p-4 bg-white shadow-sm overflow-hidden">
-            {/* Importante: O IconePicker deve ser apenas um container de botões */}
+          <div className="rounded-3xl border-2 border-gray-100 p-4 bg-white shadow-sm">
             <IconePicker value={icone} cor={corMateria} onChange={setIcone} />
           </div>
         </div>
 
-        {/* Botões empilhados no mobile para facilitar o toque */}
+        {/* Botões - Focados na experiência Mobile */}
         <div className="flex flex-col gap-3 pt-6 border-t border-gray-100">
           <button
             type="submit"
@@ -135,7 +131,7 @@ export function AddMateriaForm({ onSubmit, onClose }: AddMateriaFormProps) {
           <button
             type="button"
             onClick={onClose}
-            className="w-full py-4 text-sm font-bold text-gray-400 hover:text-gray-600 active:bg-gray-50 rounded-2xl transition-colors"
+            className="w-full py-3 text-sm font-bold text-gray-400 hover:text-gray-600 active:bg-gray-50 rounded-xl transition-all"
           >
             Cancelar
           </button>
