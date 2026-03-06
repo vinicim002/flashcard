@@ -1,73 +1,158 @@
-# React + TypeScript + Vite
+# Flashcard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicação de **flashcards para estudo**, desenvolvida com **React + TypeScript**, com o objetivo principal de praticar conceitos modernos do ecossistema React e melhorar habilidades de organização de projetos front-end.
 
-Currently, two official plugins are available:
+O projeto permite criar, organizar e revisar flashcards utilizando **categorias (decks)**, com persistência de dados no **localStorage**.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+🔗 **Deploy:** https://flashcard-six-pi.vercel.app/
 
-## React Compiler
+---
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+# 🚀 Tecnologias utilizadas
 
-## Expanding the ESLint configuration
+* React
+* Vite
+* TypeScript
+* TailwindCSS
+* Radix UI
+* Lucide React
+* React Toastify
+* UUID
+* React Router
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+---
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+# 🧠 Hooks e conceitos utilizados
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+Durante o desenvolvimento foram utilizados diversos recursos do React:
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+* useState
+* useContext
+* useEffect
+* useMemo
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Além disso, o projeto também trabalha com:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+* componentização
+* gerenciamento de estado com Context API
+* tipagem com TypeScript
+* organização de código
+* manipulação de localStorage
+* gerenciamento de rotas com React Router
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
+
+# ✨ Funcionalidades
+
+* Criar flashcards
+* Editar flashcards
+* Deletar flashcards
+* Virar o card (frente/verso)
+* Organização por **categorias / decks**
+* Notificações com **toast**
+* Persistência de dados com **localStorage**
+
+---
+
+# 📂 Estrutura do projeto
+
+O projeto foi organizado buscando seguir boas práticas de separação de responsabilidades:
+
+src/
+adapter/
+assets/
+components/
+context/
+hooks/
+Layout/
+lib/
+models/
+pages/
+routers/
+styles/
+utils/
+
+Essa organização foi pensada para facilitar a manutenção, escalabilidade e reutilização de código.
+
+---
+
+# 📸 Screenshots
+
+* Página inicial
+![alt text](image.png)
+* Flashcard em uso
+* Criação de cards
+* Organização por decks
+
+---
+
+# 🎯 Objetivo do projeto
+
+O principal objetivo deste projeto foi **praticar React e TypeScript de forma mais independente**, aplicando conceitos aprendidos na documentação oficial e tentando desenvolver uma aplicação real sem copiar código de tutoriais.
+
+---
+
+# 📚 Aprendizados
+
+Durante o desenvolvimento deste projeto eu pude melhorar principalmente em:
+
+* uso de hooks do React
+* lógica de programação
+* tipagem com TypeScript
+* organização de projetos React
+* componentização
+* gerenciamento de estado com Context API
+
+---
+
+# 🤖 Uso de IA no projeto
+
+Este projeto teve **uso mínimo de inteligência artificial**.
+
+A maior parte do desenvolvimento foi feita utilizando **documentações oficiais das tecnologias utilizadas**.
+
+A IA foi utilizada apenas em alguns casos específicos:
+
+* para ajudar na **responsividade de alguns componentes**
+* quando eu ficava muito tempo travado em alguma lógica específica
+* geração da **página 404**
+
+---
+
+# 🧩 Processo de desenvolvimento
+
+Este foi **meu primeiro projeto desenvolvido praticamente sozinho**, sem copiar código de tutoriais ou cursos.
+
+A única parte inspirada externamente foi a **página principal de flashcards**, que teve como referência um desafio do **Frontend Mentor**.
+
+Todo o restante da aplicação — estrutura, lógica, organização e implementação — foi desenvolvido por mim como forma de aprendizado e prática.
+
+Por ser um projeto de estudo, ele pode conter erros ou pontos de melhoria, mas representa um passo importante no meu processo de evolução como desenvolvedor.
+
+---
+
+# ⚙️ Como rodar o projeto
+
+Clone o repositório e instale as dependências:
+
+npm install
+
+Depois inicie o servidor de desenvolvimento:
+
+npm run dev
+
+---
+
+# 🌐 Deploy
+
+O projeto está hospedado na **Vercel**:
+
+https://flashcard-six-pi.vercel.app/
+
+---
+
+# 📌 Observação
+
+Este projeto foi desenvolvido com foco em **aprendizado e prática**, buscando aplicar boas práticas de desenvolvimento front-end e organização de código.
+
+Feedbacks e sugestões são sempre bem-vindos.
