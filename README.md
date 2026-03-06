@@ -80,9 +80,15 @@ Essa organização foi pensada para facilitar a manutenção, escalabilidade e r
 
 * Página inicial
 ![alt text](image.png)
+![alt text](image-1.png)
 * Flashcard em uso
+![alt text](image-3.png)
+![alt text](image-5.png)
+![alt text](image-6.png)
 * Criação de cards
+![alt text](image-4.png)
 * Organização por decks
+![alt text](image-2.png)
 
 ---
 
